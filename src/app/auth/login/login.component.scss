@@ -1,0 +1,164 @@
+/*s*/
+/*basic styling */
+.contactForm_pdca {
+    text-align: center;
+    margin: auto;
+    /* width: 300px; */
+    padding-bottom: 18px;
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 5px;
+    display: block;
+  }
+  
+    .contactForm_pdca span {
+        font-size: 12px;
+        margin-top: -11px;
+        float: left;
+    }
+  
+    .contactForm_pdca > div.incont {
+        position: relative;
+        width: 100%;
+        box-sizing: border-box;
+        display: block;
+        margin-bottom: 0px;
+        background-color: #fff;
+        border-radius: 3px;
+    }
+  
+        .contactForm_pdca > div.incont input,
+        .contactForm_pdca > div.incont select,
+        .contactForm_pdca > div.incont textarea {
+            width: 100%;
+            /* margin: 10px; */
+            border: none;
+            border: 1px solid rgba(0, 0, 0, 0.32);
+            padding: 0px 18px;
+            transition: all .3s ease;
+            outline: none !important;
+            border-radius: 3px;
+            font-weight: 400;
+        }
+  
+        .contactForm_pdca > div.incont input {
+            height: auto;
+            position: relative;
+            z-index: 9;
+            background: transparent;
+            padding: 21px 10px 0px 18px;
+            box-sizing: border-box;
+        }
+  
+        .contactForm_pdca > div.incont select {
+            height: 42px;
+            z-index: 9;
+            position: relative;
+            background: transparent;
+        }
+  
+        .contactForm_pdca > div.incont textarea {
+            height: 120px;
+            padding-top: 20px;
+        }
+  
+        .contactForm_pdca > div.incont label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin: auto;
+            transition: all .3s ease;
+            font-weight: 300;
+            margin-left: 0px;
+            padding-left: 18px;
+            z-index: -0;
+            font-size: 0.8500rem;
+            color: #9a9a9a;
+            font-weight: 400;
+            padding-top: 10px;
+        }
+  
+        .contactForm_pdca > div.incont input:focus {
+            /* border-color: #ff6291; */
+            border: 1px solid rgba(0, 0, 0, 0.32);
+            font-size: 0.9500rem;
+            padding: 19px 10px 9px 18px;
+        }
+  
+        .contactForm_pdca > div.incont input:not(:placeholder-shown),
+        .contactForm_pdca > div.incont select:not([value=""]),
+        .contactForm_pdca > div.incont textarea:not(:placeholder-shown) {
+            border-color: #dcdcdc;
+            padding: 19px 10px 4px 18px;
+            font-size: 0.9500rem;
+        }
+  
+  
+            .contactForm_pdca > div.incont input:focus ~ label,
+            .contactForm_pdca > div.incont input:not(:placeholder-shown) ~ label,
+            .contactForm_pdca > div.incont select:not([value=""]):valid ~ label,
+            .contactForm_pdca > div.incont textarea:focus ~ label,
+            .contactForm_pdca > div.incont textarea:not(:placeholder-shown) ~ label {
+                font-size: 12px;
+                -ms-transform: translateY(-21px);
+                -webkit-transform: translateY(-21px);
+                -moz-transform: translateY(-21px);
+                -o-transform: translateY(-21px);
+                transform: translateY(0px);
+                background-color: transparent;
+                padding-left: 18px;
+                padding-right: 10px;
+                z-index: 9;
+            }
+  
+        /* label color on focused state */
+        .contactForm_pdca > div.incont input:focus ~ label,
+        .contactForm_pdca > div.incont select:focus ~ label,
+        .contactForm_pdca > div.incont textarea:focus ~ label {
+            color: #ff6291;
+            padding-top: 4px;
+        }
+  
+        /* label color on filled state */
+        .contactForm_pdca > div.incont input:not(:placeholder-shown) ~ label,
+        .contactForm_pdca > div.incont select:not([value=""]):valid ~ label,
+        .contactForm_pdca > div.incont textarea:not(:placeholder-shown) ~ label {
+            color: #b3b3b3;
+            padding-top: 4px;
+        }
+  
+  /*e*/
+
+  .sb_buttion
+  {
+      text-align: right;
+      width: 50%;
+      display: inline-block;
+  }
+  .sb_buttion  button
+  {
+    border: none;
+    color: white;
+    background-color: #7252d3;
+    font-size: 14px;
+    padding: 12px 25px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  .lost_pass
+  {
+      padding-top: 25px;
+
+  }
+  .lost_pass a , .lost_pass a:focus, .lost_pass a:active
+  {
+      text-decoration: none;
+      color: #4e38b6;
+  }
+  .to_account
+  {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    font-size: 16px;
+    color: #2b303b;
+  }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { loginservices } from './LoginServices';
+import {Router} from "@angular/router"
 //region model
 export class LoginModel
 {
@@ -20,7 +21,7 @@ export class LoginComponent implements OnInit {
   loginmodel:LoginModel=new LoginModel();
   Usercode:any;
   Password:any;
-  constructor(private formbuilder:FormBuilder, private _loginservice:loginservices) { }
+  constructor(private formbuilder:FormBuilder, private _loginservice:loginservices,private router: Router) { }
 
 
   ngOnInit(): void {
@@ -41,6 +42,7 @@ export class LoginComponent implements OnInit {
       var loginresult =Result;
       if(loginresult.hasOwnProperty("user")){
         alert("Login Sucess");
+        this.router.navigate(['/DealHUB/dashboard'])
     }
     else
     {

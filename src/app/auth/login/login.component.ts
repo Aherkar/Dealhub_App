@@ -37,7 +37,16 @@ export class LoginComponent implements OnInit {
     this.loginmodel._user_code=this.Usercode;
     this.loginmodel._password=this.Password;
     this._loginservice.getLoginDetails(this.loginmodel).subscribe(Result=>{
-     this.message = Result.message;
+      console.log(Result);
+      var loginresult =Result;
+      if(loginresult.hasOwnProperty("user")){
+        alert("Login Sucess");
+    }
+    else
+    {
+      alert("Login Failed");
+    }
+     
     });
   }
 }

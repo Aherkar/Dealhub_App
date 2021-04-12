@@ -3,12 +3,16 @@ import {HttpClient}from '@angular/common/http'
 import {HttpHeaders} from '@angular/common/http'
 import {Observable, observable} from 'rxjs'
 import{LoginModel} from './login.component'
+import { environment } from 'src/environments/environment';
+
+
 @Injectable({
     providedIn:'root'
 })
 export class loginservices
 {
-    url='http://localhost:52229/Api/Auth/Login';
+   // url='http://localhost:52229/Api/Auth/Login';
+   url = environment.apiUrl + '/Api/Auth/Login';
     constructor(private http:HttpClient){}
     // getLoginDetails(logindetail:LoginModel): Observable<any>{
     //     return this.http.post<any>(this.url,logindetail);

@@ -40,8 +40,10 @@ export class LoginComponent implements OnInit {
     this._loginservice.getLoginDetails(this.loginmodel).subscribe(Result=>{
       console.log(Result);
       var loginresult =Result;
+
       if(loginresult.hasOwnProperty("user")){
         alert("Login Sucess");
+        console.log(Result.user.UserName);
         this.router.navigate(['/DealHUB/dashboard'])
     }
     else

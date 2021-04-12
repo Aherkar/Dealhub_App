@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { loginservices } from './LoginServices';
 import {Router} from "@angular/router"
+import { HttpErrorResponse } from '@angular/common/http';
 //region model
 export class LoginModel
 {
@@ -41,14 +42,20 @@ export class LoginComponent implements OnInit {
       console.log(Result);
       var loginresult =Result;
       if(loginresult.hasOwnProperty("user")){
+        localStorage.setItem("Token",Result.user.UserName);
         alert("Login Sucess");
-        this.router.navigate(['/DealHUB/dashboard'])
+        this.router.navigate(['/DealHUB/dashboard']);
     }
     else
     {
       alert("Login Failed");
     }
      
-    });
+    },
+    (error:HttpErrorResponse)=>{
+      alert(error.message);
+      
+    }
+    );
   }
 }

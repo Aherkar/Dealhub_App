@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SharedModule } from './shared/shared.module';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -10,6 +10,7 @@ import { DefaultLayoutComponent } from './layouts/default-layout/default-layout.
 import { BackendLayoutComponent } from './layouts/backend-layout/backend-layout.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthGuard } from './auth/auth.guard';
+import { AuthInterceptor } from './auth/auth.interceptor';
  
 
 @NgModule({
@@ -29,7 +30,11 @@ import { AuthGuard } from './auth/auth.guard';
     FormsModule,
     
   ],
-  providers: [AuthGuard],
+  providers: [AuthGuard,{
+    provide : HTTP_INTERCEPTORS,
+    useClass : AuthInterceptor,
+    multi : true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

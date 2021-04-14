@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit {
 
       if(loginresult.hasOwnProperty("user")){
         localStorage.setItem("Token",Result.user.Api_Key);
-        localStorage.setItem("Token",Result.user.Api_Key);
+      //  localStorage.setItem("Token",Result.user.Api_Key);
         localStorage.setItem("UserName",Result.user.UserName);
         alert("Login Sucess");
         console.log(Result.user.UserName);

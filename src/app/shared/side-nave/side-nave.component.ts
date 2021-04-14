@@ -65,7 +65,7 @@ export class SideNaveComponent implements OnInit {
         {
           name: 'Deal Hub Main Menu',
           iconClass: 'fa fa-code',
-          active: false,
+          active: true,
           submenu:[]
         }
      ];

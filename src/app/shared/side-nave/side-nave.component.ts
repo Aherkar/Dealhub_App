@@ -1,4 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import {SidenavService} from './sidenav.service';
+import { HttpErrorResponse } from '@angular/common/http';
+
+export class MenuModel
+{
+  _user_code:any;
+  token:any;
+
+}
 
 @Component({
   selector: 'app-side-nave',
@@ -8,51 +17,18 @@ import { Component, OnInit } from '@angular/core';
 export class SideNaveComponent implements OnInit {
 
 
-
+  constructor(private menuservice:SidenavService) { }
   // signle open mode
   config = { multi: false };
   options = { multi: false };
-  menus = [
-   { 
-     name: 'Menu 1',
-     iconClass: 'fa fa-code',
-     active: true,
-     submenu: [
-       { name: 'Sub Menu 1 ', url: '#' },
-       { name: 'Sub Menu 1', url: '#' },
-       { name: 'Sub Menu 1', url: '#' }
-     ]
-   },
-   { 
-     name: 'Menu 2',
-     iconClass: 'fa fa-mobile',
-     active: false,
-     submenu: [
-       { name: 'Sub Menu 2', url: '#' },
-       { name: 'Sub Menu 2', url: '#' },
-       { name: 'Sub Menu 2', url: '#' }
-     ]
-   },
-   { 
-     name: 'Menu 3',
-     iconClass: 'fa fa-globe',
-     active: false,
-     submenu: [
-       { name: 'Sub Menu 3', url: '#' },
-       { name: 'Sub Menu 3', url: '#' },
-       { name: 'Sub Menu 3', url: '#' }
-     ]
-   },
-   { 
-     name: 'Menu 4',
-     iconClass: 'fa fa-globe',
-     active: false
-   }
- ];
+  menus:any=null;
+  _menumodel:MenuModel=new MenuModel();
 
   ngOnInit(): void {
     this.config = this.mergeConfig(this.options);
+    this.GetMenus();
   }
+  
   mergeConfig(options) {
  
     const config = {
@@ -74,6 +50,47 @@ export class SideNaveComponent implements OnInit {
 
     this.menus[index].active = !this.menus[index].active;
   }
-  constructor() { }
+
+  GetMenus()
+  {
+    this._menumodel._user_code=localStorage.getItem("UserName");
+    this._menumodel.token=localStorage.getItem("Token");
+    this.menuservice.GetMenus(this._menumodel).subscribe(Result=>{
+      console.log("Menus");
+      console.log(Result);
+      var loginresult =Result;
+      var tempmenu=JSON.parse(Result);
+      this.menus=
+      [
+        {
+          name: 'Deal Hub Main Menu',
+          iconClass: 'fa fa-code',
+          active: false,
+          submenu:[]
+        }
+     ];
+
+     for (var i=0;i<tempmenu.length;i++)
+     {
+       this.menus[0].submenu.push(tempmenu[i]);
+     }
+
+
+
+    
+     
+    },
+    (error:HttpErrorResponse)=>{
+      alert(error.message);
+      
+    }
+    );
+
+  }
+  
+
+  
+
+
  
 }

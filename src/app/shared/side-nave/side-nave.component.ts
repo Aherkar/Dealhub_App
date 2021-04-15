@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {SidenavService} from './sidenav.service';
 import { HttpErrorResponse } from '@angular/common/http';
-
+import {Router} from "@angular/router"
 export class MenuModel
 {
   _user_code:any;
@@ -17,7 +17,7 @@ export class MenuModel
 export class SideNaveComponent implements OnInit {
 
 
-  constructor(private menuservice:SidenavService) { }
+  constructor(private menuservice:SidenavService,private router: Router) { }
   // signle open mode
   config = { multi: false };
   options = { multi: false };
@@ -83,7 +83,11 @@ export class SideNaveComponent implements OnInit {
     },
     (error:HttpErrorResponse)=>{
       debugger;
-      alert(error.message);
+      if (error.status==401)
+      {
+        this.router.navigateByUrl('/login');
+        
+      }
       
     }
     );

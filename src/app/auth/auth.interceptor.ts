@@ -1,4 +1,4 @@
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpUserEvent, HttpEvent, HttpErrorResponse } from "@angular/common/http";
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpUserEvent, HttpEvent, HttpErrorResponse,HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
@@ -20,8 +20,13 @@ export class AuthInterceptor implements HttpInterceptor {
         else
         {
             if (localStorage.getItem('userToken') != null) {
+                const headers = new HttpHeaders({
+                    'Authorization': "Bearer " + localStorage.getItem('Token'),
+                    '_user_login': localStorage.getItem("UserName")
+                  });
                 const clonedreq = req.clone({
-                    headers: req.headers.set("Authorization", "Bearer " + localStorage.getItem('Token'))
+                    //headers: req.headers.set("Authorization", "Bearer " + localStorage.getItem('Token'))
+                    headers
                 });
                 return next.handle(clonedreq).pipe(
                     tap(

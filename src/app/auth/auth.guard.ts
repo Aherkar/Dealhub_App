@@ -9,7 +9,7 @@ export class AuthGuard implements CanActivate,CanActivateChild {
   constructor(private router:Router)
   {}
   canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    debugger
+   
     if(localStorage.getItem('Token') != null)
       {
         return true;

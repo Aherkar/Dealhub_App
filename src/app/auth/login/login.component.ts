@@ -41,14 +41,15 @@ export class LoginComponent implements OnInit {
     this._loginservice.getLoginDetails(this.loginmodel).subscribe(Result=>{
       console.log(Result);
       var loginresult =Result;
-
+      debugger;
       if(loginresult.hasOwnProperty("user")){
         localStorage.setItem("Token",Result.user.Api_Key);
-      //  localStorage.setItem("Token",Result.user.Api_Key);
+        localStorage.setItem("userToken",Result.user.Api_Key);
         localStorage.setItem("UserName",Result.user.UserName);
         alert("Login Sucess");
         console.log(Result.user.UserName);
         this.router.navigate(['/DealHUB/dashboard']);
+        alert("tested");
     }
     else
     {

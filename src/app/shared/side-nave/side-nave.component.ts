@@ -56,6 +56,7 @@ export class SideNaveComponent implements OnInit {
     this._menumodel._user_code=localStorage.getItem("UserName");
     this._menumodel.token=localStorage.getItem("Token");
     this.menuservice.GetMenus(this._menumodel).subscribe(Result=>{
+      debugger;
       console.log("Menus");
       console.log(Result);
       var loginresult =Result;
@@ -81,6 +82,7 @@ export class SideNaveComponent implements OnInit {
      
     },
     (error:HttpErrorResponse)=>{
+      debugger;
       alert(error.message);
       
     }

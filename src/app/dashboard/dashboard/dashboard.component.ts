@@ -3,6 +3,14 @@ import { Component, OnInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableModule ,MatTableDataSource} from '@angular/material/table';
+import { DashboardService } from '../dashboard.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import {Router} from "@angular/router"
+
+export class DashBoardModel
+{
+  _user_code:string;
+}
 
 const DATA: any[] = [
   {projectname: 'Flipkart', Code: 'abcd', OppId: '00212', CreatedOn: '23/10/21', CreatedBy: 'Ankur',Vertical:'E-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice'},
@@ -19,6 +27,8 @@ const DATA: any[] = [
 ];
 
 
+
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -31,45 +41,82 @@ export class DashboardComponent implements OnInit {
   dataSource:any;
   listData: MatTableDataSource<any>;
   searchKey: string;
-  constructor() { }
+  dashboardData:any[]=[];
+  constructor(private _dashboardservice:DashboardService,private router: Router) { }
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  _dashboardmodel:DashBoardModel=new DashBoardModel();
+
+  
 
   ngOnInit() {
     // Get list of columns by gathering unique keys of objects found in DATA.
+   this.CallDashBoardService();
+   
+  }
 
-    const columns = DATA
-      .reduce((columns, row) => {
-        return [...columns, ...Object.keys(row)]
-      }, [])
-      .reduce((columns, column) => {
-        return columns.includes(column)
-          ? columns
-          : [...columns, column]
-      }, [])
-    // Describe the columns for <mat-table>.
-    this.columns = columns.map(column => {
-      return { 
-        columnDef: column,
-        header: column,
-        cell: (element: any) => `${element[column] ? element[column] : ``}`     
+  CallDashBoardService()
+  {
+    this._dashboardmodel._user_code=localStorage.getItem("UserName");
+    this._dashboardservice.GetDashBoardData(this._dashboardmodel).subscribe(Result=>{
+      debugger;
+      console.log("DashBoardData");
+      console.log(Result);
+      var loginresult =Result;
+      this.dashboardData=JSON.parse(Result);
+       this.BindGridDetails();
+
+
+
+    
+     
+    },
+    (error:HttpErrorResponse)=>{
+      debugger;
+      if (error.status==401)
+      {
+        this.router.navigateByUrl('/login');
+        
       }
-    })
-    this.displayedColumns = this.columns.map(c => c.columnDef);
-    this.displayedColumns.push('Action');
-    console.log(this.columns);
-    console.log(this.displayedColumns);
-    // Set the dataSource for <mat-table>.
-    // this.dataSource = DATA
-    debugger;
-    this.listData = new MatTableDataSource(DATA);
-    this.listData.sort = this.sort;
-    this.listData.paginator = this.paginator;
-    // this.listData.filterPredicate = (data, filter) => {
-    //   return this.displayedColumns.some(ele => {
-    //     return ele != 'actions' && data[ele].toLowerCase().indexOf(filter) != -1;
-    //   });
-    // };
+      
+    }
+    );
+  }
+
+  BindGridDetails()// code given by kirti kumar shifted to new function
+  {
+    const columns = this.dashboardData
+    .reduce((columns, row) => {
+      return [...columns, ...Object.keys(row)]
+    }, [])
+    .reduce((columns, column) => {
+      return columns.includes(column)
+        ? columns
+        : [...columns, column]
+    }, [])
+  // Describe the columns for <mat-table>.
+  this.columns = columns.map(column => {
+    return { 
+      columnDef: column,
+      header: column.replace("_"," "),
+      cell: (element: any) => `${element[column] ? element[column] : ``}`     
+    }
+  })
+  this.displayedColumns = this.columns.map(c => c.columnDef);
+  this.displayedColumns.push('Action');
+  console.log(this.columns);
+  console.log(this.displayedColumns);
+  // Set the dataSource for <mat-table>.
+  // this.dataSource = DATA
+  debugger;
+  this.listData = new MatTableDataSource(this.dashboardData);
+  this.listData.sort = this.sort;
+  this.listData.paginator = this.paginator;
+  // this.listData.filterPredicate = (data, filter) => {
+  //   return this.displayedColumns.some(ele => {
+  //     return ele != 'actions' && data[ele].toLowerCase().indexOf(filter) != -1;
+  //   });
+  // };
   }
 
   ngAfterViewInit() {

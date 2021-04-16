@@ -28,6 +28,7 @@ export class DashboardComponent implements OnInit {
 
   columns:Array<any>;
   displayedColumns:Array<any>;
+  theRemovedElement:any;
   dataSource:any;
   listData: MatTableDataSource<any>;
   searchKey: string;
@@ -57,8 +58,12 @@ export class DashboardComponent implements OnInit {
     })
     this.displayedColumns = this.columns.map(c => c.columnDef);
     this.displayedColumns.push('Action');
-    console.log(this.columns);
-    console.log(this.displayedColumns);
+     
+     this.theRemovedElement  = this.columns.shift();
+     
+     console.log("columns"+this.columns);
+     console.log("theRemovedElement"+this.theRemovedElement);
+    // console.log(this.displayedColumns);
     // Set the dataSource for <mat-table>.
     // this.dataSource = DATA
     debugger;
@@ -83,7 +88,10 @@ export class DashboardComponent implements OnInit {
   }
 
   getToolTipData(issueId: any): any {
-    console.log(issueId);
+    debugger;
+    //  alert(JSON.stringify(issueId));
+    return JSON.stringify(issueId);
+    //console.log(issueId);
     // const issue = this.data.find(i => i.number === issueId);
     // return `Title: ${issue.title} ||
     //     State: ${issue.state} ||

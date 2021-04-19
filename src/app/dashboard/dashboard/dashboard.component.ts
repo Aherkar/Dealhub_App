@@ -5,7 +5,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableModule ,MatTableDataSource} from '@angular/material/table';
 import { DashboardService } from '../dashboard.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import {Router} from "@angular/router"
+import {Router} from "@angular/router";
+import {  filter } from 'rxjs/operators';
 
 export class DashBoardModel
 {
@@ -47,11 +48,18 @@ export class DashboardComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   _dashboardmodel:DashBoardModel=new DashBoardModel();
 
+  Drafts:any=0;
+  Submitted:any=0;
+  Rejected:any=0;
+  ApprovedOBF:any=0;
+  ApprovedPPL:any=0;
+
   
 
   ngOnInit() {
     // Get list of columns by gathering unique keys of objects found in DATA.
    this.CallDashBoardService();
+   this.GetCount();
    
   }
 
@@ -65,6 +73,37 @@ export class DashboardComponent implements OnInit {
       var loginresult =Result;
       this.dashboardData=JSON.parse(Result);
        this.BindGridDetails();
+
+
+
+    
+     
+    },
+    (error:HttpErrorResponse)=>{
+      debugger;
+      if (error.status==401)
+      {
+        this.router.navigateByUrl('/login');
+        
+      }
+      
+    }
+    );
+  }
+
+  GetCount()
+  {
+    this._dashboardmodel._user_code=localStorage.getItem("UserName");
+    this._dashboardservice.GetDashBoardDataCount(this._dashboardmodel).subscribe(Result=>{
+      debugger;
+      console.log("DashBoardData Count");
+      console.log(Result);
+      var countresult =JSON.parse(Result);
+      //this.dashboardData=JSON.parse(Result);
+      this.Drafts=countresult[0].count;
+      this.Submitted=countresult[1].count;
+      this.Rejected=countresult[3].count;
+      this.ApprovedOBF=countresult[2].count;
 
 
 

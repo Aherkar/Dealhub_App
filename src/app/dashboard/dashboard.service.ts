@@ -15,6 +15,8 @@ export class DashboardService {
   }
 
   url = environment.apiUrl + '/Api/DashBoard/GetDashBoardData';
+  urlCount = environment.apiUrl + '/Api/DashBoard/GetDashBoardDataCount';
+
 
     // getLoginDetails(logindetail:LoginModel): Observable<any>{
     //     return this.http.post<any>(this.url,logindetail);
@@ -22,6 +24,12 @@ export class DashboardService {
     GetDashBoardData(DashBoardData: any): Observable<any> {  
 	    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };  
 	    return this.http.post<any>(this.url,  
+        DashBoardData, httpOptions);  
+	  }
+
+    GetDashBoardDataCount(DashBoardData: any): Observable<any> {  
+	    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };  
+	    return this.http.post<any>(this.urlCount,  
         DashBoardData, httpOptions);  
 	  }
 }

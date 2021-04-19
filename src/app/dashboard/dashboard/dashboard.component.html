@@ -7,6 +7,7 @@
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field> -->
+    
     <input  [(ngModel)]="searchKey" placeholder="Search" autocomplete="off" (keyup)="applyFilter()">
       <button  aria-label="Clear"*ngIf="searchKey"  (click)="onSearchClear()">
         <!-- <mat-icon>close</mat-icon> -->
@@ -28,8 +29,14 @@
         
       </ng-container>
         <ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
+          <div *ngIf="column.columnDef == 'download'">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ column.header }}</mat-header-cell>
+          <mat-cell  *matCellDef="let row"><a href="{{ column.cell(row) }}">download</a></mat-cell>
+        </div>
+        <div *ngIf="column.columnDef != 'download'">
           <mat-header-cell *matHeaderCellDef mat-sort-header>{{ column.header }}</mat-header-cell>
           <mat-cell  *matCellDef="let row">{{ column.cell(row) }}</mat-cell>
+        </div>
           
         </ng-container>
         <ng-container  matColumnDef="Action">

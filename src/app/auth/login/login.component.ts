@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
 import { loginservices } from './LoginServices';
 import {Router} from "@angular/router"
 import { HttpErrorResponse } from '@angular/common/http';
+
 //region model
 export class LoginModel
 {
   _user_code:string;
   _password:string;
+  _token:string;
 }
 //endregion
 
@@ -22,34 +24,68 @@ export class LoginComponent implements OnInit {
   loginmodel:LoginModel=new LoginModel();
   Usercode:any;
   Password:any;
-  constructor(private formbuilder:FormBuilder, private _loginservice:loginservices,private router: Router) { }
+  RememberMe:any;
+  ResetPass:boolean=false;
+  NewPassword:any="";
+  confirmpassword:any="";
+  constructor(private formbuilder:FormBuilder, 
+    private _loginservice:loginservices,private router: Router) { }
 
 
   ngOnInit(): void {
-    this.loginDetail= this.formbuilder.group({
-      usercode:['',[Validators.required]],
-      password:['',[Validators.required]]
-
-    })
+    if(this.ResetPass != true)
+    {
+      if(localStorage.getItem("rememberCurrentUser")!= null)
+      {
+        if(localStorage.getItem("rememberCurrentUser")=='true')
+        {
+          this.loginmodel._user_code = localStorage.getItem('UserName'); 
+          this.RememberMe = localStorage.getItem('rememberCurrentUser');
+          this.loginmodel._token=localStorage.getItem('Token');
+          this.loginmodel._password="abc";
+          this.GetToken( this.loginmodel);
+        }
     
+     }
+    }
+    
+  }
+  GetToken(loginmodel)
+  {
+    this._loginservice.GetToken(loginmodel).subscribe(Result=>{
+      console.log(Result);
+      if (Result=="Authorised")
+      {
+       // this.router.navigate(['/DealHUB/dashboard']);
+      }
+      
+    });
   }
   onFormSubmit()
   {
     
     this.loginmodel._user_code=this.Usercode;
     this.loginmodel._password=this.Password;
+    
     this._loginservice.getLoginDetails(this.loginmodel).subscribe(Result=>{
       console.log(Result);
       var loginresult =Result;
-      debugger;
       if(loginresult.hasOwnProperty("user")){
-        localStorage.setItem("Token",Result.user.Api_Key);
-        localStorage.setItem("userToken",Result.user.Api_Key);
+      if(this.RememberMe)
+      {
         localStorage.setItem("UserName",Result.user.UserName);
-        alert("Login Sucess");
-        console.log(Result.user.UserName);
-        this.router.navigate(['/DealHUB/dashboard']);
-        alert("tested");
+        localStorage.setItem("Token",Result.user.Api_Key);
+        localStorage.setItem("rememberCurrentUser",this.RememberMe);
+       }
+      else
+      {
+        localStorage.setItem("rememberCurrentUser",this.RememberMe);
+      }
+      localStorage.setItem("Token",Result.user.Api_Key);
+      
+      console.log(Result.user.UserName);
+      alert("Login Sucess");
+      this.router.navigate(['/DealHUB/dashboard']);
     }
     else
     {
@@ -62,5 +98,29 @@ export class LoginComponent implements OnInit {
       
     }
     );
+  }
+  ResetPassword()
+  {
+    this.loginmodel._user_code=this.Usercode;
+    this.loginmodel._password=this.NewPassword;
+     
+    this._loginservice.ResetPassword(this.loginmodel).subscribe(Result=>{
+      alert("Password Changed Successfully.");
+      this.router.navigate(['/DealHUB/dashboard']);
+    });
+  }
+  LostPass(event)
+  {
+    event.preventDefault();
+    this.ResetPass=true;
+  }
+  GetEmail()
+  {
+    this.loginmodel._user_code=this.Usercode;
+    this.loginmodel._password=this.Password;
+    this._loginservice.sendemail(this.loginmodel).subscribe(Result=>{
+      alert("Email Send.");
+     
+    });
   }
 }

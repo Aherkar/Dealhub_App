@@ -13,18 +13,19 @@ export class DashBoardModel
   _user_code:string;
 }
 
+
 const DATA: any[] = [
-  {projectname: 'Flipkart', Code: 'abcd', OppId: '00212', CreatedOn: '23/10/21', CreatedBy: 'Ankur',Vertical:'E-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice'},
-  {projectname: 'Amazon', Code: 'xyz', OppId: '21502', CreatedOn: '23/09/21', CreatedBy: 'Sarvesh',Vertical:'D-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice'},
-  {projectname: 'Alpha', Code: 'xyz', OppId: '21502', CreatedOn: '23/09/21', CreatedBy: 'Dhanraj',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice'},
-  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Vikas',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice'},
-  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Vikas',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice'},
-  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'kirti',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice'},
-  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'kirti',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice'},
-  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Sailesh',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice'},
-  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Sailesh',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice'},
-  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Ankita',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice'},
-  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Ankita',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice'},
+  {projectname: 'Flipkart', Code: 'abcd', OppId: '00212', CreatedOn: '23/10/21', CreatedBy: 'Ankur',Vertical:'E-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice',download:'https://unsplash.com/photos/rIDlMH07nRY/download?force=true'},
+  {projectname: 'Amazon', Code: 'xyz', OppId: '21502', CreatedOn: '23/09/21', CreatedBy: 'Sarvesh',Vertical:'D-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice',download:'https://unsplash.com/photos/rIDlMH07nRY/download?force=true'},
+  {projectname: 'Alpha', Code: 'xyz', OppId: '21502', CreatedOn: '23/09/21', CreatedBy: 'Dhanraj',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice',download:'https://unsplash.com/photos/rIDlMH07nRY/download?force=true'},
+  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Vikas',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice',download:'https://unsplash.com/photos/rIDlMH07nRY/download?force=true'},
+  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Vikas',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice',download:'https://unsplash.com/photos/rIDlMH07nRY/download?force=true'},
+  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'kirti',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice',download:'https://unsplash.com/photos/rIDlMH07nRY/download?force=true'},
+  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'kirti',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice',download:'https://unsplash.com/photos/rIDlMH07nRY/download?force=true'},
+  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Sailesh',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice',download:'https://unsplash.com/photos/rIDlMH07nRY/download?force=true'},
+  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Sailesh',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice',download:'https://unsplash.com/photos/rIDlMH07nRY/download?force=true'},
+  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Ankita',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice',download:'https://unsplash.com/photos/rIDlMH07nRY/download?force=true'},
+  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Ankita',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice',download:'https://unsplash.com/photos/rIDlMH07nRY/download?force=true'},
 ];
 
 
@@ -39,6 +40,7 @@ export class DashboardComponent implements OnInit {
 
   columns:Array<any>;
   displayedColumns:Array<any>;
+  theRemovedElement:any;
   dataSource:any;
   listData: MatTableDataSource<any>;
   searchKey: string;
@@ -143,11 +145,15 @@ export class DashboardComponent implements OnInit {
   })
   this.displayedColumns = this.columns.map(c => c.columnDef);
   this.displayedColumns.push('Action');
-  console.log(this.columns);
-  console.log(this.displayedColumns);
+     
+     this.theRemovedElement  = this.columns.shift();
+     
+     console.log("columns"+this.columns);
+     console.log("theRemovedElement"+this.theRemovedElement);
+    // console.log(this.displayedColumns);
   // Set the dataSource for <mat-table>.
   // this.dataSource = DATA
-  debugger;
+    
   this.listData = new MatTableDataSource(this.dashboardData);
   this.listData.sort = this.sort;
   this.listData.paginator = this.paginator;
@@ -169,7 +175,10 @@ export class DashboardComponent implements OnInit {
   }
 
   getToolTipData(issueId: any): any {
-    console.log(issueId);
+    
+    //  alert(JSON.stringify(issueId));
+    return JSON.stringify(issueId);
+    //console.log(issueId);
     // const issue = this.data.find(i => i.number === issueId);
     // return `Title: ${issue.title} ||
     //     State: ${issue.state} ||

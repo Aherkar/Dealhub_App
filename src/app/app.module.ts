@@ -11,7 +11,7 @@ import { BackendLayoutComponent } from './layouts/backend-layout/backend-layout.
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthInterceptor } from './auth/auth.interceptor';
-
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner'
  
 
 @NgModule({
@@ -29,7 +29,7 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    
+    MatProgressSpinnerModule,
     
   ],
   providers: [AuthGuard,{

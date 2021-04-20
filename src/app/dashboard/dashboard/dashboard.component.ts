@@ -7,6 +7,9 @@ import { DashboardService } from '../dashboard.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import {Router} from "@angular/router";
 import {  filter } from 'rxjs/operators';
+import { NgxSpinnerService } from "ngx-spinner";
+
+
 
 export class DashBoardModel
 {
@@ -45,10 +48,11 @@ export class DashboardComponent implements OnInit {
   listData: MatTableDataSource<any>;
   searchKey: string;
   dashboardData:any[]=[];
-  constructor(private _dashboardservice:DashboardService,private router: Router) { }
+  constructor(private _dashboardservice:DashboardService,private router: Router,private spinner: NgxSpinnerService) { }
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   _dashboardmodel:DashBoardModel=new DashBoardModel();
+  
 
   Drafts:any=0;
   Submitted:any=0;
@@ -60,6 +64,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     // Get list of columns by gathering unique keys of objects found in DATA.
+   this.spinner.show();
    this.CallDashBoardService();
    this.GetCount();
    
@@ -67,6 +72,8 @@ export class DashboardComponent implements OnInit {
 
   CallDashBoardService()
   {
+   
+  
     this._dashboardmodel._user_code=localStorage.getItem("UserName");
     this._dashboardservice.GetDashBoardData(this._dashboardmodel).subscribe(Result=>{
       debugger;
@@ -74,6 +81,7 @@ export class DashboardComponent implements OnInit {
       console.log(Result);
       var loginresult =Result;
       this.dashboardData=JSON.parse(Result);
+   
        this.BindGridDetails();
 
 
@@ -83,6 +91,7 @@ export class DashboardComponent implements OnInit {
     },
     (error:HttpErrorResponse)=>{
       debugger;
+   
       if (error.status==401)
       {
         this.router.navigateByUrl('/login');
@@ -95,9 +104,12 @@ export class DashboardComponent implements OnInit {
 
   GetCount()
   {
+   
     this._dashboardmodel._user_code=localStorage.getItem("UserName");
+  
     this._dashboardservice.GetDashBoardDataCount(this._dashboardmodel).subscribe(Result=>{
       debugger;
+    
       console.log("DashBoardData Count");
       console.log(Result);
       var countresult =JSON.parse(Result);
@@ -114,6 +126,7 @@ export class DashboardComponent implements OnInit {
     },
     (error:HttpErrorResponse)=>{
       debugger;
+     
       if (error.status==401)
       {
         this.router.navigateByUrl('/login');

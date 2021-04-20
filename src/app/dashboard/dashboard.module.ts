@@ -6,17 +6,19 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { FormsModule } from '@angular/forms';
 import { MaterialModule } from '../shared/materialmodule/materialmodule.module';
-
+import { NgxSpinnerModule } from "ngx-spinner";
 
 
 
 @NgModule({
+ 
   declarations: [DashboardComponent],
   imports: [
     CommonModule,
     FormsModule,
     DashboardRoutingModule,
-    MaterialModule
+    MaterialModule,
+    NgxSpinnerModule
     
   ]
 })

@@ -1,6 +1,6 @@
 <div>
     <p class="to_account">Sign in to your account</p>
-    <form>
+    <form *ngIf="this.ResetPass==false">
         <div>
             <div class="contactForm_pdca ">
                 <div class="incont">
@@ -22,13 +22,13 @@
             display: inline-block;
             width: 50%;
         ">
-    <input type="checkbox" id="Remember" name="Remember" value="Remember">
+    <input type="checkbox" id="Remember" name="Remember" value="Remember" [(ngModel)]="RememberMe"> 
     <label for="Remember"> Remember me</label>    
     </div>
         <div  class="sb_buttion"><button (click)="onFormSubmit()">Sign in</button></div></div>
 
         <div class="lost_pass">
-           <div> <a href="#">Lost your password?</a></div>
+           <div> <a (click)="LostPass($event)">Lost your password?</a></div>
             <div>
                 <a href="#">Not a member yet? Signup now.</a>
             </div>
@@ -36,5 +36,26 @@
         <div>
            
         </div>
+    </form>
+    
+</div>
+<div>
+    <form *ngIf="this.ResetPass">
+        <div>
+        <div >
+            <div class="contactForm_pdca ">
+                <div class="incont">
+                    <input type="input" id="usercode" value="" name="usercode" placeholder=" " [(ngModel)]="Usercode" >
+                    <label for="contactName">UserName</label>
+                </div>
+             </div>
+        </div>
+         <div  style="display: flex;flex-direction: row;flex-wrap: wrap;">
+           <div  style="display: inline-block;width: 50%;">
+        </div>
+         <div  class="sb_buttion"><button (click)="GetEmail()">Reset Password</button></div>
+        </div>
+     </div>
+
     </form>
 </div>

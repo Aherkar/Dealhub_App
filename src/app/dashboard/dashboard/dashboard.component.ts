@@ -74,6 +74,12 @@ export class DashboardComponent implements OnInit {
   {
    
   
+    //   debugger;
+    //   console.log("DashBoardData");
+    //   console.log(Result);
+    //   var loginresult =Result;
+    //   this.dashboardData=JSON.parse(Result);
+    //    this.BindGridDetails();
     this._dashboardmodel._user_code=localStorage.getItem("UserName");
     this._dashboardservice.GetDashBoardData(this._dashboardmodel).subscribe(Result=>{
       debugger;
@@ -88,6 +94,9 @@ export class DashboardComponent implements OnInit {
 
     
      
+    // },
+    // (error:HttpErrorResponse)=>{
+    //   debugger;
     },
     (error:HttpErrorResponse)=>{
       debugger;
@@ -127,14 +136,13 @@ export class DashboardComponent implements OnInit {
     (error:HttpErrorResponse)=>{
       debugger;
      
-      if (error.status==401)
-      {
-        this.router.navigateByUrl('/login');
         
-      }
+    //   }
       
-    }
-    );
+    // }
+    // );
+    this.dashboardData=DATA;
+    this.BindGridDetails();
   }
 
   BindGridDetails()// code given by kirti kumar shifted to new function

@@ -13,8 +13,8 @@ import { ObfCreationComponent } from './obf-creation/obf-creation.component';
 
 
 @NgModule({
-  declarations: [DashboardComponent, CreateOBFComponent],
-  declarations: [DashboardComponent, ObfCreationComponent],
+  declarations: [DashboardComponent, CreateOBFComponent,ObfCreationComponent],
+ 
   imports: [
     CommonModule,
     FormsModule,

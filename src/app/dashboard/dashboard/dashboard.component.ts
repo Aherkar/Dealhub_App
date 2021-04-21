@@ -7,28 +7,24 @@ import { DashboardService } from '../dashboard.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import {Router} from "@angular/router";
 import {  filter } from 'rxjs/operators';
-import { NgxSpinnerService } from "ngx-spinner";
-
-
 
 export class DashBoardModel
 {
   _user_code:string;
 }
 
-
 const DATA: any[] = [
-  {projectname: 'Flipkart', Code: 'abcd', OppId: '00212', CreatedOn: '23/10/21', CreatedBy: 'Ankur',Vertical:'E-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice',download:'https://unsplash.com/photos/rIDlMH07nRY/download?force=true'},
-  {projectname: 'Amazon', Code: 'xyz', OppId: '21502', CreatedOn: '23/09/21', CreatedBy: 'Sarvesh',Vertical:'D-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice',download:'https://unsplash.com/photos/rIDlMH07nRY/download?force=true'},
-  {projectname: 'Alpha', Code: 'xyz', OppId: '21502', CreatedOn: '23/09/21', CreatedBy: 'Dhanraj',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice',download:'https://unsplash.com/photos/rIDlMH07nRY/download?force=true'},
-  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Vikas',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice',download:'https://unsplash.com/photos/rIDlMH07nRY/download?force=true'},
-  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Vikas',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice',download:'https://unsplash.com/photos/rIDlMH07nRY/download?force=true'},
-  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'kirti',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice',download:'https://unsplash.com/photos/rIDlMH07nRY/download?force=true'},
-  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'kirti',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice',download:'https://unsplash.com/photos/rIDlMH07nRY/download?force=true'},
-  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Sailesh',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice',download:'https://unsplash.com/photos/rIDlMH07nRY/download?force=true'},
-  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Sailesh',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice',download:'https://unsplash.com/photos/rIDlMH07nRY/download?force=true'},
-  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Ankita',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice',download:'https://unsplash.com/photos/rIDlMH07nRY/download?force=true'},
-  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Ankita',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice',download:'https://unsplash.com/photos/rIDlMH07nRY/download?force=true'},
+  {projectname: 'Flipkart', Code: 'abcd', OppId: '00212', CreatedOn: '23/10/21', CreatedBy: 'Ankur',Vertical:'E-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice'},
+  {projectname: 'Amazon', Code: 'xyz', OppId: '21502', CreatedOn: '23/09/21', CreatedBy: 'Sarvesh',Vertical:'D-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice'},
+  {projectname: 'Alpha', Code: 'xyz', OppId: '21502', CreatedOn: '23/09/21', CreatedBy: 'Dhanraj',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice'},
+  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Vikas',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice'},
+  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Vikas',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice'},
+  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'kirti',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice'},
+  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'kirti',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice'},
+  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Sailesh',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice'},
+  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Sailesh',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice'},
+  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Ankita',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice'},
+  {projectname: 'Alpha', Code: 'cde', OppId: '52364', CreatedOn: '23/09/21', CreatedBy: 'Ankita',Vertical:'F-Comm',ProjectType:'Warehouse',PaymentTerms:'Invoice'},
 ];
 
 
@@ -43,16 +39,14 @@ export class DashboardComponent implements OnInit {
 
   columns:Array<any>;
   displayedColumns:Array<any>;
-  theRemovedElement:any;
   dataSource:any;
   listData: MatTableDataSource<any>;
   searchKey: string;
   dashboardData:any[]=[];
-  constructor(private _dashboardservice:DashboardService,private router: Router,private spinner: NgxSpinnerService) { }
+  constructor(private _dashboardservice:DashboardService,private router: Router) { }
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   _dashboardmodel:DashBoardModel=new DashBoardModel();
-  
 
   Drafts:any=0;
   Submitted:any=0;
@@ -64,7 +58,6 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     // Get list of columns by gathering unique keys of objects found in DATA.
-   this.spinner.show();
    this.CallDashBoardService();
    this.GetCount();
    
@@ -72,14 +65,6 @@ export class DashboardComponent implements OnInit {
 
   CallDashBoardService()
   {
-   
-  
-    //   debugger;
-    //   console.log("DashBoardData");
-    //   console.log(Result);
-    //   var loginresult =Result;
-    //   this.dashboardData=JSON.parse(Result);
-    //    this.BindGridDetails();
     this._dashboardmodel._user_code=localStorage.getItem("UserName");
     this._dashboardservice.GetDashBoardData(this._dashboardmodel).subscribe(Result=>{
       debugger;
@@ -87,20 +72,15 @@ export class DashboardComponent implements OnInit {
       console.log(Result);
       var loginresult =Result;
       this.dashboardData=JSON.parse(Result);
-   
        this.BindGridDetails();
 
 
 
     
      
-    // },
-    // (error:HttpErrorResponse)=>{
-    //   debugger;
     },
     (error:HttpErrorResponse)=>{
       debugger;
-   
       if (error.status==401)
       {
         this.router.navigateByUrl('/login');
@@ -113,12 +93,9 @@ export class DashboardComponent implements OnInit {
 
   GetCount()
   {
-   
     this._dashboardmodel._user_code=localStorage.getItem("UserName");
-  
     this._dashboardservice.GetDashBoardDataCount(this._dashboardmodel).subscribe(Result=>{
       debugger;
-    
       console.log("DashBoardData Count");
       console.log(Result);
       var countresult =JSON.parse(Result);
@@ -135,14 +112,14 @@ export class DashboardComponent implements OnInit {
     },
     (error:HttpErrorResponse)=>{
       debugger;
-     
+      if (error.status==401)
+      {
+        this.router.navigateByUrl('/login');
         
-    //   }
+      }
       
-    // }
-    // );
-    this.dashboardData=DATA;
-    this.BindGridDetails();
+    }
+    );
   }
 
   BindGridDetails()// code given by kirti kumar shifted to new function
@@ -166,15 +143,11 @@ export class DashboardComponent implements OnInit {
   })
   this.displayedColumns = this.columns.map(c => c.columnDef);
   this.displayedColumns.push('Action');
-     
-     this.theRemovedElement  = this.columns.shift();
-     
-     console.log("columns"+this.columns);
-     console.log("theRemovedElement"+this.theRemovedElement);
-    // console.log(this.displayedColumns);
+  console.log(this.columns);
+  console.log(this.displayedColumns);
   // Set the dataSource for <mat-table>.
   // this.dataSource = DATA
-    
+  debugger;
   this.listData = new MatTableDataSource(this.dashboardData);
   this.listData.sort = this.sort;
   this.listData.paginator = this.paginator;
@@ -196,10 +169,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getToolTipData(issueId: any): any {
-    
-    //  alert(JSON.stringify(issueId));
-    return JSON.stringify(issueId);
-    //console.log(issueId);
+    console.log(issueId);
     // const issue = this.data.find(i => i.number === issueId);
     // return `Title: ${issue.title} ||
     //     State: ${issue.state} ||

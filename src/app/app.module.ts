@@ -11,9 +11,7 @@ import { BackendLayoutComponent } from './layouts/backend-layout/backend-layout.
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthInterceptor } from './auth/auth.interceptor';
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort';
+
  
 
 @NgModule({
@@ -31,9 +29,7 @@ import { MatSortModule } from '@angular/material/sort';
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule
+    
     
   ],
   providers: [AuthGuard,{

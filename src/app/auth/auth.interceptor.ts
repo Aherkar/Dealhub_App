@@ -39,7 +39,7 @@ export class AuthInterceptor implements HttpInterceptor {
                       
                         if (error instanceof HttpErrorResponse) {
                             if (error.status != 200) {
-                                //this.router.navigateByUrl('/login');
+                                this.router.navigateByUrl('/login');
                             }
                           }
 

@@ -39,6 +39,7 @@ export class DashboardComponent implements OnInit {
 
   columns:Array<any>;
   displayedColumns:Array<any>;
+  theRemovedElement:any;
   dataSource:any;
   listData: MatTableDataSource<any>;
   searchKey: string;

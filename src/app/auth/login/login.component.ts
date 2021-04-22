@@ -82,7 +82,7 @@ export class LoginComponent implements OnInit {
         localStorage.setItem("rememberCurrentUser",this.RememberMe);
       }
       localStorage.setItem("Token",Result.user.Api_Key);
-      
+      localStorage.setItem("userToken",Result.user.Api_Key);
       console.log(Result.user.UserName);
       alert("Login Sucess");
       this.router.navigate(['/DealHUB/dashboard']);

@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit {
       console.log(Result);
       if (Result=="Authorised")
       {
-       // this.router.navigate(['/DealHUB/dashboard']);
+        this.router.navigate(['/DealHUB/dashboard']);
       }
       
     });
@@ -75,13 +75,15 @@ export class LoginComponent implements OnInit {
       {
         localStorage.setItem("UserName",Result.user.UserName);
         localStorage.setItem("Token",Result.user.Api_Key);
-        localStorage.setItem("rememberCurrentUser",this.RememberMe);
+        localStorage.setItem("rememberCurrentUser","true");
        }
       else
       {
-        localStorage.setItem("rememberCurrentUser",this.RememberMe);
+        localStorage.setItem("UserName",Result.user.UserName);
+        localStorage.setItem("Token",Result.user.Api_Key);
+        localStorage.setItem("rememberCurrentUser","false");
       }
-      localStorage.setItem("Token",Result.user.Api_Key);
+      localStorage.setItem("userToken",Result.user.Api_Key);
       
       console.log(Result.user.UserName);
       alert("Login Sucess");

@@ -22,7 +22,7 @@ import { NgxDropzoneModule } from 'ngx-dropzone';
     ReactiveFormsModule,
     DashboardRoutingModule,
     MaterialModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
     NgxDropzoneModule
     
   ]

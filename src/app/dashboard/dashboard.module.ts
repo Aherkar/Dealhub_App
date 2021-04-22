@@ -7,6 +7,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { FormsModule } from '@angular/forms';
 import { MaterialModule } from '../shared/materialmodule/materialmodule.module';
 import { CreateOBFComponent } from './dashboard/create-obf/create-obf.component';
+import { NgxDropzoneModule } from 'ngx-dropzone';
 
 
 
@@ -17,7 +18,8 @@ import { CreateOBFComponent } from './dashboard/create-obf/create-obf.component'
     CommonModule,
     FormsModule,
     DashboardRoutingModule,
-    MaterialModule
+    MaterialModule,
+    NgxDropzoneModule
     
   ]
 })

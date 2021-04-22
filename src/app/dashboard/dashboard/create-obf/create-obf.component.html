@@ -1,5 +1,55 @@
 <input type="file" (change)="onFileChange($event)" multiple="false" />
-
+<div style="display: block;float: left;width:100%;">
+<div style="width:25%;margin-right:15px;float: left;">
+<ngx-dropzone (change)="onSelect($event,'coversheet')" >
+	<ngx-dropzone-label>Drop OBFSheet</ngx-dropzone-label>
+	<ngx-dropzone-preview *ngFor="let f of coversheetfiles" [removable]="true" (removed)="onRemove(f)">
+		<ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+	</ngx-dropzone-preview>
+    
+</ngx-dropzone>
+<input type="button" value="Upload"/>
+</div>
+<div style="width:25%;margin-right:15px;float: left;">
+<ngx-dropzone (change)="onSelect($event,'loipo')" >
+	<ngx-dropzone-label>Drop LOI/PO Agreement</ngx-dropzone-label>
+	<ngx-dropzone-preview *ngFor="let f of loipofiles" [removable]="true" (removed)="onRemove(f)">
+		<ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+	</ngx-dropzone-preview>
+    
+</ngx-dropzone>
+<select>
+    <option value="PO">PO</option>
+    <option value="LOI">LOI</option>
+</select>
+<input type="checkbox" name="selfdec" id="selfdec" value="self" />
+<label for="selfdec">This OBF is without LOI / PO </label><br>
+ <input type="button" value="Upload"/> 
+</div>
+<div style="width:25%;margin-right:15px;float: left;">
+<ngx-dropzone (change)="onSelect($event,'support')" >
+	<ngx-dropzone-label>Drop Supporting documents</ngx-dropzone-label>
+	<ngx-dropzone-preview *ngFor="let f of supportfiles" [removable]="true" (removed)="onRemove(f)">
+		<ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+	</ngx-dropzone-preview>
+    
+</ngx-dropzone>
+ <input type="button" value="Upload"/> 
+</div>
+<div>
+    <input type="text" placeholder="Enter Comment" style="height:180px;" [(ngModel)]="Comments"/>
+    
+</div>
+</div>
+<div style="display: block;float: left;width:77%;" *ngIf="progress > 0">
+    <div style="display: block;float: left;background: red;height:5px;text-align: center;color: red;"  role="progressbar" [style.width.%]="progress">
+        {{progress}}%
+    </div>
+</div>
+<div style="display: block;float: left;width:100%;">
+    <a [href]="sanitize(coversheetpath)" target="_blank"  style="margin-right:10px;">Download Coversheet</a>
+    <a [href]="sanitize(loipopath)" target="_blank">Download Loi Po </a>
+</div>
 <table>
     <tbody>
         <tr *ngFor="let row of data">

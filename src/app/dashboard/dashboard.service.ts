@@ -4,6 +4,7 @@ import {HttpHeaders} from '@angular/common/http'
 import {Observable, observable} from 'rxjs'
 import { environment } from 'src/environments/environment';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -13,6 +14,7 @@ export class DashboardService {
   { 
 
   }
+  
 
   url = environment.apiUrl + '/Api/DashBoard/GetDashBoardData';
 

@@ -209,4 +209,16 @@ export class CreateOBFComponent implements OnInit {
      console.log(this.ObfCreateForm.value);
        }
 
+  onCheckboxChange(e) {
+    if(e.currentTarget.checked)
+    {
+      this.ObfCreateForm.get('Loiposheet').clearValidators();
+      this.ObfCreateForm.get('Loiposheet').updateValueAndValidity();
+    }
+    else{
+      this.ObfCreateForm.get('Loiposheet').setValidators(Validators.required)
+      this.ObfCreateForm.get('Loiposheet').updateValueAndValidity();
+    }
+  }
+
 }

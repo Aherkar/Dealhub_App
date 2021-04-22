@@ -33,9 +33,15 @@ export class DashboardService {
         DashBoardData, httpOptions);  
 	  }
 
-    uploadImage(image) {
+    uploadImage(image:File[]) {
+     // debugger;
       const formData: FormData = new FormData();
-      formData.append('Image', image, image.name);
+      let count=0;
+      image.forEach(value=>{
+        formData.append('Image'+count, value, value.name);
+        count++;
+      });
+       
       // const httpOptions = { headers: new HttpHeaders({ 'No-Auth':'True'}),observe:"events",reportProgress: true};  
       return this.http.post("http://localhost:52229/Api/Auth/UploadImage", formData,{
           headers: new HttpHeaders({ 'No-Auth':'True'}),

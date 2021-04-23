@@ -54,14 +54,29 @@ ProjectDetails: MatTableDataSource<any>;
 		console.log(event);
     if(types == "coversheet")
        {
-        this.coversheetfiles.push(...event.addedFiles);
+        
+        if(this.coversheetfiles.length > 1)
+        {
+          alert("Kindly upload only one Coversheet file");
+          return false;
+        }
+        else{
+          this.coversheetfiles.push(...event.addedFiles);
+        }
         // this.files = this.coversheetfiles;
         this.updatedatafromcoversheet(event);
         
        }
        else if(types == "loipo")
        {
+         if(this.loipofiles.length > 1 )
+         {
+          alert("Kindly upload only one Loi / Po file");
+          return false;
+         }
+         else{
         this.loipofiles.push(...event.addedFiles);
+        }
         // this.files = this.loipofiles;
        }
        else
@@ -114,7 +129,20 @@ ProjectDetails: MatTableDataSource<any>;
 
 	onRemove(files:File[],event) {
 		console.log(event);
-		this.files.splice(files.indexOf(event), 1);
+		files.splice(files.indexOf(event), 1);
+    if(this.coversheetfiles.length == 0)
+    {
+      this._obfservices.ObfCreateForm.patchValue({coversheet: ""});
+    }
+    if(this.loipofiles.length == 0)
+    {
+      this._obfservices.ObfCreateForm.patchValue({Loiposheet: ""});
+    }
+    if(this.supportfiles.length == 0)
+    {
+      this._obfservices.ObfCreateForm.patchValue({Supportpath: ""});
+    }
+
 	}
   updatedatafromcoversheet(evt)
   {

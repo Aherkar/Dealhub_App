@@ -49,13 +49,72 @@
 </div>
 <div style="display: block;float: left;width:100%;">
     <input type="button" class="btn btn-primary" style="margin-right:5px;" [disabled]="_obfservices.ObfCreateForm.invalid" (click)="Saveasdraft()" value="Save as Draft"/>
-    <input type="button" class="btn btn-primary" [disabled]="_obfservices.ObfCreateForm.invalid" value="Preview & Submit"/>
+    <input type="button" (click)="Prview()" class="btn btn-primary" [disabled]="_obfservices.ObfCreateForm.invalid" value="Preview & Submit"/>
 </div>
 <div style="display: block;float: left;width:100%;">
     <a [href]="sanitize(coversheetpath)" target="_blank"   style="margin-right:10px;">Download Coversheet</a>
     <a [href]="sanitize(loipopath)" target="_blank">Download Loi Po </a>
 </div>
 </form>
+<div >
+    <ng-template #callAPIDialog>
+ 
+<!--         
+            <mat-table #table [dataSource]="ProjectDetails" matSort>
+             
+                <ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
+                 
+                <div>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{ column.header }}</mat-header-cell>
+                  <mat-cell  *matCellDef="let row">{{ column.cell(row) }}</mat-cell>
+                </div>
+                  
+                </ng-container>
+                
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+              </mat-table> -->
+              <div style="display:block;float:left;width:100%;background: #4e65d796;">
+                <span><label>Project Name</label>{{OBFData.Projectname}}</span>
+                <span><label>Project Type</label>{{OBFData.Projecttype}}</span>
+                <span><label>Opportunity Id</label>{{OBFData.Opportunityid}}</span>
+                <span><label>Location / State</label>{{OBFData.State}}</span>
+                <span><label>Vertical</label>{{OBFData.Vertical}}</span>
+                <span><label>Vertical Head</label>{{OBFData.Verticalhead}}</span>
+                <span><label>Created on</label>{{OBFData.Createddate}}</span>
+                <span><label>SAP IO number</label>{{OBFData.Sapio}}</span>
+                <span><label>Customer Name</label>{{OBFData.Customername}}</span>
+                <span><label>SAP Customer Code</label>{{OBFData.Sapcustomercode}}</span>
+                <span><label>Project Primary Location</label>{{OBFData.Projectprimarylocation}}</span>
+                <span><label>Service/Solution/Integrated Solution type </label>{{OBFData.Solutiontype}}</span>
+            </div>
+            <div style="display:block;float:left;width:100%;background: #b6b6b896;">
+                <span><label>Total Revenue (Cr)</label>{{OBFData.Totalrevenue}}</span>
+                <span><label>Total Cost (Cr)</label>{{OBFData.Totalcost}}</span>
+                <span><label>Total Margin</label>{{OBFData.Totalmargin}}</span>
+                <span><label>Total Project Life</label>{{OBFData.Totalprojectlife}}</span>
+                <span><label>EBT %</label>{{OBFData.EBT}}</span>
+                <span><label>Capex Cr</label>{{OBFData.Capex}}</span>
+                <span><label>IIR % Surplus Cash</label>{{OBFData.IRRsurpluscash}}</span>
+                <span><label>IIR % Borrowed Fund</label>{{OBFData.IRRborrowedfund}}</span>
+                <span><label>Payment Terms</label>{{OBFData.Paymentterms}}</span>
+            </div>
+              <div>Project Date:{{OBFData.Projectdate}}</div>
+              <div>Project Brief:{{OBFData.Projectbrief}} </div>
+              <div>Assumption & Risk:{{OBFData.Assumptionrisks}} </div>
+              <div>LOI/Po:{{OBFData.Loipo}}</div>
+              <div>
+                <input type="text" placeholder="Enter Comment" style="height:180px;" [value]="OBFData.comments"/>
+                </div>
+                <div>
+                    <div  class="sb_buttion" (click)="EditOBF()"><button>Edit</button></div>
+                    <div  class="sb_buttion"><button>Submit</button></div>
+                </div>
+        
+    </ng-template>
+    
+ 
+    </div>
 <!-- <table>
     <tbody>
         <tr *ngFor="let row of data">

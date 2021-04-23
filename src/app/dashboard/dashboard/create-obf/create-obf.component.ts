@@ -1,10 +1,15 @@
 import { HttpEventType } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { DashboardService } from '../../dashboard.service';
 import {DomSanitizer} from '@angular/platform-browser';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { OBFServices } from '../../services/obfservices.service';
+import {​​​​​​​​ MatTableModule ,MatTableDataSource}​​​​​​​​ from'@angular/material/table';
+import {​​​​​​​​ MatDialog }​​​​​​​​ from'@angular/material/dialog';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { TemplateRef } from '@angular/core';
 
 @Component({
   selector: 'app-create-obf',
@@ -19,7 +24,16 @@ export class CreateOBFComponent implements OnInit {
   supportdocpath:string="";
   Comments:string="";
   progress: number = 0;
-  constructor(private _dashboardservice:DashboardService,private sanitizer:DomSanitizer,public _obfservices:OBFServices) { }
+  OBFData:any;
+columns:Array<any>;
+displayedColumns:Array<any>;
+ProjectDetails: MatTableDataSource<any>;
+    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild('callAPIDialog') callAPIDialog: TemplateRef<any>;
+
+
+  constructor(private _dashboardservice:DashboardService,private sanitizer:DomSanitizer,public _obfservices:OBFServices,private dialog:MatDialog) { }
 
   ngOnInit(): void {
     this._obfservices.ObfCreateForm.reset();
@@ -87,9 +101,10 @@ export class CreateOBFComponent implements OnInit {
        this.loipopath = path;
        this._obfservices.ObfCreateForm.patchValue({Loiposheet: path});
       }
-      else
+      else if(types == "support")
       {
-
+        this.supportdocpath = path;
+        this._obfservices.ObfCreateForm.patchValue({Supportpath: path});
       }
        
       }
@@ -186,6 +201,53 @@ export class CreateOBFComponent implements OnInit {
       this._obfservices.ObfCreateForm.get('Loiposheet').setValidators(Validators.required)
       this._obfservices.ObfCreateForm.get('Loiposheet').updateValueAndValidity();
     }
+  }
+
+  // GridBinding()
+  //   {
+  //     debugger;
+  //     const columns = this.OBFData
+  //     .reduce((columns, row) => {
+  //       return [...columns, ...Object.keys(row)]
+  //     }, [])
+  //     .reduce((columns, column) => {
+  //       return columns.includes(column)
+  //         ? columns
+  //         : [...columns, column]
+  //     }, [])
+  //   // Describe the columns for <mat-table>.
+  //   this.columns = columns.map(column => {
+  //     return { 
+  //       columnDef: column,
+  //       header: column.replace("_"," "),
+  //       cell: (element: any) => `${element[column] ? element[column] : ``}`     
+  //     }
+  //   })
+  //   this.displayedColumns = this.columns.map(c => c.columnDef);
+  //   this.ProjectDetails = new MatTableDataSource(this.OBFData);
+  //   this.ProjectDetails.sort = this.sort;
+  //   this.ProjectDetails.paginator = this.paginator;
+  //   }
+  Prview()
+  {
+    debugger;
+    this.OBFData = this._obfservices.ObfCreateForm.getRawValue();
+    // this.GridBinding();
+    //this.router.navigate(['/DealHUB/dashboard/preview']);
+    const dialogRef = this.dialog.open(this.callAPIDialog, {
+      width: '80%',
+      height:'80%',
+      disableClose: true,
+     // data: { campaignId: this.params.id }
+  })
+    
+    //let dialogRef = this.dialog.open(this.callAPIDialog);
+  }
+
+  EditOBF()
+  {
+    this._obfservices.ObfCreateForm.setValue(this._obfservices.ObfCreateForm.value);
+    this.dialog.closeAll();
   }
 
 }

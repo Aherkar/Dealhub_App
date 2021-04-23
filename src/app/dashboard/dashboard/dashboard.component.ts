@@ -155,5 +155,10 @@ export class DashboardComponent implements OnInit {
   onEdit(row){
     console.log(row);
   }
+  CreateOBF()
+  {
+    this.router.navigate(['/DealHUB/dashboard/createobf']);
+    
+  }
 
 }

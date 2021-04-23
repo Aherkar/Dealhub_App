@@ -3,6 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { DashboardService } from '../../dashboard.service';
 import {DomSanitizer} from '@angular/platform-browser';
+import { MatDialog } from '@angular/material/dialog'
+import { TemplateRef, ViewChild } from '@angular/core';
+import { MatTableModule ,MatTableDataSource} from '@angular/material/table';
+import {Router} from "@angular/router";
+
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-create-obf',
@@ -17,7 +24,15 @@ export class CreateOBFComponent implements OnInit {
   supportdocpath:string="";
   Comments:string="";
   progress: number = 0;
-  constructor(private _dashboardservice:DashboardService,private sanitizer:DomSanitizer) { }
+  OCFData:any[]=[];
+    columns:Array<any>;
+    displayedColumns:Array<any>;
+    ProjectDetails: MatTableDataSource<any>;
+    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild('callAPIDialog') callAPIDialog: TemplateRef<any>;
+  constructor(private _dashboardservice:DashboardService,private sanitizer:DomSanitizer,
+    private dialog:MatDialog,private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -131,5 +146,43 @@ export class CreateOBFComponent implements OnInit {
      reader.readAsBinaryString(target.files[0]);
 
   }
+  GridBinding()
+    {
+      const columns = this.OCFData
+      .reduce((columns, row) => {
+        return [...columns, ...Object.keys(row)]
+      }, [])
+      .reduce((columns, column) => {
+        return columns.includes(column)
+          ? columns
+          : [...columns, column]
+      }, [])
+    // Describe the columns for <mat-table>.
+    this.columns = columns.map(column => {
+      return { 
+        columnDef: column,
+        header: column.replace("_"," "),
+        cell: (element: any) => `${element[column] ? element[column] : ``}`     
+      }
+    })
+    this.displayedColumns = this.columns.map(c => c.columnDef);
+    this.ProjectDetails = new MatTableDataSource(this.OCFData);
+    this.ProjectDetails.sort = this.sort;
+    this.ProjectDetails.paginator = this.paginator;
+    }
+  Prview()
+  {
+   
+    //this.router.navigate(['/DealHUB/dashboard/preview']);
+    const dialogRef = this.dialog.open(this.callAPIDialog, {
+      width: '550px',
+      height:'550px',
+      disableClose: true,
+     // data: { campaignId: this.params.id }
+  })
+    
+    //let dialogRef = this.dialog.open(this.callAPIDialog);
+  }
+
 
 }

@@ -59,3 +59,41 @@
         </tr>
     </tbody>
 </table>
+<div>
+    <div  class="sb_buttion"><button>Save As Draft</button></div>
+    <div  class="sb_buttion"><button (click)="Prview()">Prview & Submit</button></div>
+</div>
+<div >
+    <ng-template #callAPIDialog>
+
+        
+            <mat-table #table [dataSource]="ProjectDetails" matSort>
+             
+                <ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
+                 
+                <div>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{ column.header }}</mat-header-cell>
+                  <mat-cell  *matCellDef="let row">{{ column.cell(row) }}</mat-cell>
+                </div>
+                  
+                </ng-container>
+                
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+              </mat-table>
+              <div>Project Date:12/01/2021</div>
+              <div>Project Brief:Running deliver </div>
+              <div>Assumption & Risk:Running deliver </div>
+              <div>LOI/Po:Rate card attached</div>
+              <div>
+                <input type="text" placeholder="Enter Comment" style="height:180px;" [(ngModel)]="Comments"/>
+                </div>
+                <div>
+                    <div  class="sb_buttion"><button>Edit</button></div>
+                    <div  class="sb_buttion"><button>Submit</button></div>
+                </div>
+        
+    </ng-template>
+    
+
+    </div>

@@ -11,7 +11,7 @@ import { BackendLayoutComponent } from './layouts/backend-layout/backend-layout.
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthInterceptor } from './auth/auth.interceptor';
-
+import { MatDialogModule } from '@angular/material/dialog';
  
 
 @NgModule({
@@ -29,7 +29,7 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    
+    MatDialogModule
     
   ],
   providers: [AuthGuard,{
@@ -37,6 +37,8 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     useClass : AuthInterceptor,
     multi : true
   }],
+   
+ 
   bootstrap: [AppComponent]
 })
 export class AppModule { }

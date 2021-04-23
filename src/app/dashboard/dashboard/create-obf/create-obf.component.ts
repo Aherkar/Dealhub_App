@@ -24,6 +24,7 @@ export class CreateOBFComponent implements OnInit {
   supportdocpath:string="";
   Comments:string="";
   progress: number = 0;
+  loiopdisabled:boolean=false;
   OBFData:any;
 columns:Array<any>;
 displayedColumns:Array<any>;
@@ -51,7 +52,6 @@ ProjectDetails: MatTableDataSource<any>;
 
 	onSelect(event,types) {
     debugger;
-		console.log(event);
     if(types == "coversheet")
        {
         
@@ -224,10 +224,14 @@ ProjectDetails: MatTableDataSource<any>;
     {
       this._obfservices.ObfCreateForm.get('Loiposheet').clearValidators();
       this._obfservices.ObfCreateForm.get('Loiposheet').updateValueAndValidity();
+      this._obfservices.ObfCreateForm.patchValue({Loiposheet: ""});
+      this.loipofiles.length=0;
+      this.loiopdisabled = true;
     }
     else{
       this._obfservices.ObfCreateForm.get('Loiposheet').setValidators(Validators.required)
       this._obfservices.ObfCreateForm.get('Loiposheet').updateValueAndValidity();
+      this.loiopdisabled = false;
     }
   }
 

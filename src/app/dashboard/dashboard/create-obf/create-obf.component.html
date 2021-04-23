@@ -2,7 +2,7 @@
 <form [formGroup]="_obfservices.ObfCreateForm">
 <div style="display: block;float: left;width:100%;">
 <div style="width:25%;margin-right:15px;float: left;">
-<ngx-dropzone (change)="onSelect($event,'coversheet')" >
+<ngx-dropzone (change)="onSelect($event,'coversheet')" accept=".xlsx">
 	<ngx-dropzone-label>Drop OBFSheet</ngx-dropzone-label>
 	<ngx-dropzone-preview *ngFor="let f of coversheetfiles" [removable]="true" (removed)="onRemove(coversheetfiles,f)">
 		<ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
@@ -12,7 +12,7 @@
 <input [disabled]="!(coversheetfiles.length >0)" class="btn btn-primary" (click)="uploadfiles(coversheetfiles,'coversheet')" type="button" value="Upload"/>
 </div>
 <div style="width:25%;margin-right:15px;float: left;">
-<ngx-dropzone (change)="onSelect($event,'loipo')" >
+<ngx-dropzone (change)="onSelect($event,'loipo')" accept=".xlsx" [disabled]="loiopdisabled">
 	<ngx-dropzone-label>Drop LOI/PO Agreement</ngx-dropzone-label>
 	<ngx-dropzone-preview *ngFor="let f of loipofiles" [removable]="true" (removed)="onRemove(loipofiles,f)">
 		<ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
@@ -28,7 +28,7 @@
  <input type="button" [disabled]="!(loipofiles.length >0)" class="btn btn-primary" (click)="uploadfiles(loipofiles,'loipo')" value="Upload"/> 
 </div>
 <div style="width:25%;margin-right:15px;float: left;">
-<ngx-dropzone (change)="onSelect($event,'support')" >
+<ngx-dropzone (change)="onSelect($event,'support')" accept=".xlsx">
 	<ngx-dropzone-label>Drop Supporting documents</ngx-dropzone-label>
 	<ngx-dropzone-preview *ngFor="let f of supportfiles" [removable]="true" (removed)="onRemove(supportfiles,f)">
 		<ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>

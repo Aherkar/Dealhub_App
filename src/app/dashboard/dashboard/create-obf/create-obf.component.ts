@@ -4,6 +4,7 @@ import * as XLSX from 'xlsx';
 import { DashboardService } from '../../dashboard.service';
 import {DomSanitizer} from '@angular/platform-browser';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { OBFServices } from '../../services/obfservices.service';
 
 @Component({
   selector: 'app-create-obf',
@@ -18,44 +19,10 @@ export class CreateOBFComponent implements OnInit {
   supportdocpath:string="";
   Comments:string="";
   progress: number = 0;
-  ObfCreateForm:FormGroup;
-  constructor(private _dashboardservice:DashboardService,private sanitizer:DomSanitizer) { }
+  constructor(private _dashboardservice:DashboardService,private sanitizer:DomSanitizer,public _obfservices:OBFServices) { }
 
   ngOnInit(): void {
-    this.ObfCreateForm = new FormGroup({
-     coversheet : new FormControl("",Validators.required),
-     Loiposheet : new FormControl("",Validators.required),
-     Loipodropdown: new FormControl("PO"),
-     Selfdeclare: new FormControl(""),
-     Projectname:new FormControl(""),
-     Projecttype:new FormControl(""),
-     Opportunityid:new FormControl(""),
-     State:new FormControl(""),
-     Vertical:new FormControl(""),
-     Verticalhead:new FormControl(""),
-     Createddate:new FormControl(""),
-     Sapio:new FormControl(""),
-     Customername:new FormControl(""),
-     Sapcustomercode:new FormControl(""),
-     Projectprimarylocation:new FormControl(""),
-     Solutiontype:new FormControl(""),
-     Sector:new FormControl(""),
-     Subsector:new FormControl(""),
-     Totalrevenue:new FormControl(""),
-     Totalcost:new FormControl(""),
-     Totalmargin:new FormControl(""),
-     Totalprojectlife:new FormControl(""),
-     EBT:new FormControl(""),
-     Capex:new FormControl(""),
-     IRRsurpluscash:new FormControl(""),
-     IRRborrowedfund:new FormControl(""),
-     Paymentterms:new FormControl(""),
-     Projectdate:new FormControl(""),
-     Projectbrief:new FormControl(""),
-     Assumptionrisks:new FormControl(""),
-     Loipo:new FormControl(""),
-     comments:new FormControl("")
-    });
+    this._obfservices.ObfCreateForm.reset();
   }
 
 
@@ -113,12 +80,12 @@ export class CreateOBFComponent implements OnInit {
       if(types == "coversheet")
       {
        this.coversheetpath = path;
-       this.ObfCreateForm.patchValue({coversheet: path});
+       this._obfservices.ObfCreateForm.patchValue({coversheet: path});
       }
       else if(types == "loipo")
       {
        this.loipopath = path;
-       this.ObfCreateForm.patchValue({Loiposheet: path});
+       this._obfservices.ObfCreateForm.patchValue({Loiposheet: path});
       }
       else
       {
@@ -154,24 +121,24 @@ export class CreateOBFComponent implements OnInit {
       const ws: XLSX.WorkSheet = wb.Sheets[wsname];
 
     // console.log(ws.A1.h);
-    this.ObfCreateForm.patchValue({Projectname: ws.E4.h});
-    this.ObfCreateForm.patchValue({Projecttype: ws.E5.h});
-    this.ObfCreateForm.patchValue({Opportunityid: ws.E6.h});
-    this.ObfCreateForm.patchValue({State: ws.E7.h});
-    this.ObfCreateForm.patchValue({Vertical: ws.E8.h});
-    this.ObfCreateForm.patchValue({Verticalhead: ws.E9.h});
-    this.ObfCreateForm.patchValue({Projectbrief: ws.D12.v});
-    this.ObfCreateForm.patchValue({Totalrevenue: ws.D13.w});
-    this.ObfCreateForm.patchValue({Totalcost: ws.F13.w});
-    this.ObfCreateForm.patchValue({Totalmargin: ws.H13.w});
-    this.ObfCreateForm.patchValue({Totalprojectlife: ws.D14.w});
-    this.ObfCreateForm.patchValue({IRRsurpluscash: ws.F14.w});
-    this.ObfCreateForm.patchValue({EBT: ws.H14.w});
-    this.ObfCreateForm.patchValue({Capex: ws.D15.w});
-    this.ObfCreateForm.patchValue({IRRborrowedfund: ws.F15.w});
-    this.ObfCreateForm.patchValue({Paymentterms: ws.D16.w});
-    this.ObfCreateForm.patchValue({Assumptionrisks: ws.D17.w});
-    this.ObfCreateForm.patchValue({Loipo: ws.D18.w});
+    this._obfservices.ObfCreateForm.patchValue({Projectname: ws.E4.h});
+    this._obfservices.ObfCreateForm.patchValue({Projecttype: ws.E5.h});
+    this._obfservices.ObfCreateForm.patchValue({Opportunityid: ws.E6.h});
+    this._obfservices.ObfCreateForm.patchValue({State: ws.E7.h});
+    this._obfservices.ObfCreateForm.patchValue({Vertical: ws.E8.h});
+    this._obfservices.ObfCreateForm.patchValue({Verticalhead: ws.E9.h});
+    this._obfservices.ObfCreateForm.patchValue({Projectbrief: ws.D12.v});
+    this._obfservices.ObfCreateForm.patchValue({Totalrevenue: ws.D13.w});
+    this._obfservices.ObfCreateForm.patchValue({Totalcost: ws.F13.w});
+    this._obfservices.ObfCreateForm.patchValue({Totalmargin: ws.H13.w});
+    this._obfservices.ObfCreateForm.patchValue({Totalprojectlife: ws.D14.w});
+    this._obfservices.ObfCreateForm.patchValue({IRRsurpluscash: ws.F14.w});
+    this._obfservices.ObfCreateForm.patchValue({EBT: ws.H14.w});
+    this._obfservices.ObfCreateForm.patchValue({Capex: ws.D15.w});
+    this._obfservices.ObfCreateForm.patchValue({IRRborrowedfund: ws.F15.w});
+    this._obfservices.ObfCreateForm.patchValue({Paymentterms: ws.D16.w});
+    this._obfservices.ObfCreateForm.patchValue({Assumptionrisks: ws.D17.w});
+    this._obfservices.ObfCreateForm.patchValue({Loipo: ws.D18.w});
      console.log(ws);
 
       this.data = (XLSX.utils.sheet_to_json(ws, { header: 1 }));
@@ -206,18 +173,18 @@ export class CreateOBFComponent implements OnInit {
        }
 
   Saveasdraft(){
-     console.log(this.ObfCreateForm.value);
+     console.log(this._obfservices.ObfCreateForm.value);
        }
 
   onCheckboxChange(e) {
     if(e.currentTarget.checked)
     {
-      this.ObfCreateForm.get('Loiposheet').clearValidators();
-      this.ObfCreateForm.get('Loiposheet').updateValueAndValidity();
+      this._obfservices.ObfCreateForm.get('Loiposheet').clearValidators();
+      this._obfservices.ObfCreateForm.get('Loiposheet').updateValueAndValidity();
     }
     else{
-      this.ObfCreateForm.get('Loiposheet').setValidators(Validators.required)
-      this.ObfCreateForm.get('Loiposheet').updateValueAndValidity();
+      this._obfservices.ObfCreateForm.get('Loiposheet').setValidators(Validators.required)
+      this._obfservices.ObfCreateForm.get('Loiposheet').updateValueAndValidity();
     }
   }
 

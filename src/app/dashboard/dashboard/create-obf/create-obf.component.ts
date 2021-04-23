@@ -24,7 +24,7 @@ export class CreateOBFComponent implements OnInit {
   supportdocpath:string="";
   Comments:string="";
   progress: number = 0;
-  OBFData:any[]=[];
+  OBFData:any;
 columns:Array<any>;
 displayedColumns:Array<any>;
 ProjectDetails: MatTableDataSource<any>;
@@ -203,43 +203,51 @@ ProjectDetails: MatTableDataSource<any>;
     }
   }
 
-  GridBinding()
-    {
-      const columns = this.OBFData
-      .reduce((columns, row) => {
-        return [...columns, ...Object.keys(row)]
-      }, [])
-      .reduce((columns, column) => {
-        return columns.includes(column)
-          ? columns
-          : [...columns, column]
-      }, [])
-    // Describe the columns for <mat-table>.
-    this.columns = columns.map(column => {
-      return { 
-        columnDef: column,
-        header: column.replace("_"," "),
-        cell: (element: any) => `${element[column] ? element[column] : ``}`     
-      }
-    })
-    this.displayedColumns = this.columns.map(c => c.columnDef);
-    this.ProjectDetails = new MatTableDataSource(this.OBFData);
-    this.ProjectDetails.sort = this.sort;
-    this.ProjectDetails.paginator = this.paginator;
-    }
+  // GridBinding()
+  //   {
+  //     debugger;
+  //     const columns = this.OBFData
+  //     .reduce((columns, row) => {
+  //       return [...columns, ...Object.keys(row)]
+  //     }, [])
+  //     .reduce((columns, column) => {
+  //       return columns.includes(column)
+  //         ? columns
+  //         : [...columns, column]
+  //     }, [])
+  //   // Describe the columns for <mat-table>.
+  //   this.columns = columns.map(column => {
+  //     return { 
+  //       columnDef: column,
+  //       header: column.replace("_"," "),
+  //       cell: (element: any) => `${element[column] ? element[column] : ``}`     
+  //     }
+  //   })
+  //   this.displayedColumns = this.columns.map(c => c.columnDef);
+  //   this.ProjectDetails = new MatTableDataSource(this.OBFData);
+  //   this.ProjectDetails.sort = this.sort;
+  //   this.ProjectDetails.paginator = this.paginator;
+  //   }
   Prview()
   {
-    this.OBFData.push(this._obfservices.ObfCreateForm.getRawValue());
-    this.GridBinding();
+    debugger;
+    this.OBFData = this._obfservices.ObfCreateForm.getRawValue();
+    // this.GridBinding();
     //this.router.navigate(['/DealHUB/dashboard/preview']);
     const dialogRef = this.dialog.open(this.callAPIDialog, {
-      width: '550px',
-      height:'550px',
+      width: '80%',
+      height:'80%',
       disableClose: true,
      // data: { campaignId: this.params.id }
   })
     
     //let dialogRef = this.dialog.open(this.callAPIDialog);
+  }
+
+  EditOBF()
+  {
+    this._obfservices.ObfCreateForm.setValue(this._obfservices.ObfCreateForm.value);
+    this.dialog.closeAll();
   }
 
 }

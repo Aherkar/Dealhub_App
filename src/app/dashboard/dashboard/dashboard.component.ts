@@ -89,6 +89,7 @@ export class DashboardComponent implements OnInit {
 
   BindGridDetails()// code given by kirti kumar shifted to new function
   {
+    
     const columns = this.dashboardData
     .reduce((columns, row) => {
       return [...columns, ...Object.keys(row)]

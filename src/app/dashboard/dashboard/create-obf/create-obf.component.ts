@@ -24,6 +24,7 @@ export class CreateOBFComponent implements OnInit {
   supportdocpath:string="";
   Comments:string="";
   progress: number = 0;
+  OBFData:any[]=[];
 columns:Array<any>;
 displayedColumns:Array<any>;
 ProjectDetails: MatTableDataSource<any>;
@@ -204,7 +205,7 @@ ProjectDetails: MatTableDataSource<any>;
 
   GridBinding()
     {
-      const columns = JSON.parse(this._obfservices.ObfCreateForm.value)
+      const columns = this.OBFData
       .reduce((columns, row) => {
         return [...columns, ...Object.keys(row)]
       }, [])
@@ -222,12 +223,13 @@ ProjectDetails: MatTableDataSource<any>;
       }
     })
     this.displayedColumns = this.columns.map(c => c.columnDef);
-    this.ProjectDetails = new MatTableDataSource(this._obfservices.ObfCreateForm.value);
+    this.ProjectDetails = new MatTableDataSource(this.OBFData);
     this.ProjectDetails.sort = this.sort;
     this.ProjectDetails.paginator = this.paginator;
     }
   Prview()
   {
+    this.OBFData.push(this._obfservices.ObfCreateForm.getRawValue());
     this.GridBinding();
     //this.router.navigate(['/DealHUB/dashboard/preview']);
     const dialogRef = this.dialog.open(this.callAPIDialog, {

@@ -24,6 +24,7 @@ export class CreateOBFComponent implements OnInit {
   supportdocpath:string="";
   Comments:string="";
   progress: number = 0;
+  progressInfos: any[] = [];
   loiopdisabled:boolean=false;
   OBFData:any;
 columns:Array<any>;
@@ -49,9 +50,10 @@ ProjectDetails: MatTableDataSource<any>;
   coversheetfiles: File[] = [];
   loipofiles: File[] = [];
   supportfiles: File[] = [];
+  message: string[] = [];
 
 	onSelect(event,types) {
-    debugger;
+    
     if(types == "coversheet")
        {
         
@@ -90,13 +92,24 @@ ProjectDetails: MatTableDataSource<any>;
 
   uploadfiles(files:File[],types)
   {
-    this._dashboardservice.uploadImage(files).subscribe(
+    this.progressInfos = [];
+    this.message= [];
+    var path="";
+    var consolidatedpath="";
+    const val = this.validateform();
+    if(val)
+    {
+    for (let i = 0; i < files.length; i++) {
+      this.progressInfos[i] = { value: 0, fileName: files[i].name };
+
+    this._dashboardservice.uploadImage(files[i]).subscribe(
       event => {
-        var path="";
+        
         if(event.type === HttpEventType.UploadProgress)
         {
           console.log('Upload Progress: '+Math.round(event.loaded/event.total * 100) +"%");
           this.progress = Math.round(event.loaded/event.total * 100);
+          this.progressInfos[i].value = Math.round(event.loaded/event.total * 100);
         }
         else if(event.type === HttpEventType.Response)
         {
@@ -105,11 +118,14 @@ ProjectDetails: MatTableDataSource<any>;
       }
       debugger;
       path=path.split('"').join('');
-      path = path.substring(0,path.length -1);
+      path = path.substring(0,path.length -1); 
+      consolidatedpath += path +",";
+      consolidatedpath = consolidatedpath.substring(0,consolidatedpath.length -1);
       if(types == "coversheet")
       {
        this.coversheetpath = path;
        this._obfservices.ObfCreateForm.patchValue({coversheet: path});
+       
       }
       else if(types == "loipo")
       {
@@ -121,10 +137,16 @@ ProjectDetails: MatTableDataSource<any>;
         this.supportdocpath = path;
         this._obfservices.ObfCreateForm.patchValue({Supportpath: path});
       }
-       
+      },
+      (err:any)=>{
+        this.progressInfos[i].value = 0;
+        const msg = 'Could not upload the file: ' + files[i].name;
+        this.message.push(msg);
       }
     );
-
+    }
+  }
+    // this.validateform();
   }
 
 	onRemove(files:File[],event) {
@@ -162,15 +184,21 @@ ProjectDetails: MatTableDataSource<any>;
       const wsname : string = wb.SheetNames[6];
 
       const ws: XLSX.WorkSheet = wb.Sheets[wsname];
-
+      console.log(ws);
     // console.log(ws.A1.h);
     this._obfservices.ObfCreateForm.patchValue({Projectname: ws.E4.h});
-    this._obfservices.ObfCreateForm.patchValue({Projecttype: ws.E5.h});
+    this._obfservices.ObfCreateForm.patchValue({Customername: ws.E5.h});
+    // this._obfservices.ObfCreateForm.patchValue({Solutioncategory: ws.E6.h});
+    // this._obfservices.ObfCreateForm.patchValue({Otherservicesandcategories: ws.E7.h});
+    // this._obfservices.ObfCreateForm.patchValue({Projecttype: ws.E5.h});
     this._obfservices.ObfCreateForm.patchValue({Opportunityid: ws.E6.h});
     this._obfservices.ObfCreateForm.patchValue({State: ws.E7.h});
     this._obfservices.ObfCreateForm.patchValue({Vertical: ws.E8.h});
-    this._obfservices.ObfCreateForm.patchValue({Verticalhead: ws.E9.h});
-    this._obfservices.ObfCreateForm.patchValue({Projectbrief: ws.D12.v});
+     this._obfservices.ObfCreateForm.patchValue({Verticalhead: ws.E9.w});
+    //this._obfservices.ObfCreateForm.patchValue({Verticalhead: "abc"});
+    // this._obfservices.ObfCreateForm.patchValue({Sector: ws.E11.h});
+    // this._obfservices.ObfCreateForm.patchValue({Subsector: ws.E12.h});
+    this._obfservices.ObfCreateForm.patchValue({Projectbrief: ws.D12.h});
     this._obfservices.ObfCreateForm.patchValue({Totalrevenue: ws.D13.w});
     this._obfservices.ObfCreateForm.patchValue({Totalcost: ws.F13.w});
     this._obfservices.ObfCreateForm.patchValue({Totalmargin: ws.H13.w});
@@ -179,12 +207,11 @@ ProjectDetails: MatTableDataSource<any>;
     this._obfservices.ObfCreateForm.patchValue({EBT: ws.H14.w});
     this._obfservices.ObfCreateForm.patchValue({Capex: ws.D15.w});
     this._obfservices.ObfCreateForm.patchValue({IRRborrowedfund: ws.F15.w});
-    this._obfservices.ObfCreateForm.patchValue({Paymentterms: ws.D16.w});
-    this._obfservices.ObfCreateForm.patchValue({Assumptionrisks: ws.D17.w});
-    this._obfservices.ObfCreateForm.patchValue({Loipo: ws.D18.w});
-     console.log(ws);
-
-      this.data = (XLSX.utils.sheet_to_json(ws, { header: 1 }));
+    this._obfservices.ObfCreateForm.patchValue({Paymentterms: ws.H15.w});
+    this._obfservices.ObfCreateForm.patchValue({Assumptionrisks: ws.D17.h});
+    this._obfservices.ObfCreateForm.patchValue({Loipo: ws.D18.h});
+     
+    this.data = (XLSX.utils.sheet_to_json(ws, { header: 1 }));
 
      console.log("MAin DATa: "+this.data);
 
@@ -194,9 +221,6 @@ ProjectDetails: MatTableDataSource<any>;
     };
 
     reader.readAsBinaryString(evt.addedFiles[0]);
-
-
-
   }
   onFileChange(evt) {
     const excel = evt.target.files[0]
@@ -216,7 +240,11 @@ ProjectDetails: MatTableDataSource<any>;
        }
 
   Saveasdraft(){
+    const val =  this.validateform();
+    if(val)
+    {
      console.log(this._obfservices.ObfCreateForm.value);
+    }
        }
 
   onCheckboxChange(e) {
@@ -281,5 +309,99 @@ ProjectDetails: MatTableDataSource<any>;
     this._obfservices.ObfCreateForm.setValue(this._obfservices.ObfCreateForm.value);
     this.dialog.closeAll();
   }
-
+   
+  validateform()
+  {
+    if(this._obfservices.ObfCreateForm.get('Projectname').errors)
+    {
+      alert("Project name is required");
+      return false;
+    }
+    else if(this._obfservices.ObfCreateForm.get('Customername').errors)
+    {
+      alert("Customer name is required");
+      return false;
+    }
+    else if(this._obfservices.ObfCreateForm.get('Solutioncategory').errors)
+    {
+      alert("Solution category is required");
+      return false;
+    }
+    else if(this._obfservices.ObfCreateForm.get('Otherservicesandcategories').errors)
+    {
+      alert("Other Services and Solutions field is required");
+      return false;
+    }
+    else if(this._obfservices.ObfCreateForm.get('Opportunityid').errors)
+    {
+      alert("Opportunityid is required");
+      return false;
+    }
+    else if(this._obfservices.ObfCreateForm.get('State').errors)
+    {
+      alert("Project primay location is required");
+      return false;
+    }
+    else if(this._obfservices.ObfCreateForm.get('Vertical').errors)
+    {
+      alert("Vertical field is required");
+      return false;
+    }
+    else if(this._obfservices.ObfCreateForm.get('Sector').errors)
+    {
+      alert("Sector field is required");
+      return false;
+    }
+    else if(this._obfservices.ObfCreateForm.get('Verticalhead').errors)
+    {
+      alert("Vertical head field is required");
+      return false;
+    }
+    else if(this._obfservices.ObfCreateForm.get('Projectbrief').errors)
+    {
+      alert("Project brief is required");
+      return false;
+    }
+    else if(this._obfservices.ObfCreateForm.get('Totalrevenue').errors)
+    {
+      alert("Total revenue field is required");
+      return false;
+    }
+    else if(this._obfservices.ObfCreateForm.get('Totalcost').errors)
+    {
+      alert("Total cost field is required");
+      return false;
+    }
+    else if(this._obfservices.ObfCreateForm.get('Totalmargin').errors)
+    {
+      alert("Total margin field is required");
+      return false;
+    }
+    else if(this._obfservices.ObfCreateForm.get('Totalprojectlife').errors)
+    {
+      alert("Total project life field is required");
+      return false;
+    }
+    else if(this._obfservices.ObfCreateForm.get('Capex').errors)
+    {
+      alert("Capex field is required");
+      return false;
+    }
+    else if(this._obfservices.ObfCreateForm.get('Paymentterms').errors)
+    {
+      alert("Payment terms field is required");
+      return false;
+    }
+    else if(this._obfservices.ObfCreateForm.get('Assumptionrisks').errors)
+    {
+      alert("Assumption and risks  field is required");
+      return false;
+    }
+    else if(this._obfservices.ObfCreateForm.get('Loipo').errors)
+    {
+      alert("Loi / po  field is required");
+      return false;
+    }
+    return true;
+  }
 }

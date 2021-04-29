@@ -1,5 +1,13 @@
 <!-- <input type="file" (change)="updatedatafromcoversheet($event)" multiple="false" /> -->
 <form [formGroup]="_obfservices.ObfCreateForm">
+<mat-accordion class="example-headers-align"> 
+ <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
+  <mat-expansion-panel-header>
+  <mat-panel-title>
+    Upload Documents
+  </mat-panel-title>
+  
+</mat-expansion-panel-header>
 <div style="display: block;float: left;width:100%;">
 <div style="width:25%;margin-right:15px;float: left;">
 <ngx-dropzone (change)="onSelect($event,'coversheet')" accept=".xlsx">
@@ -42,6 +50,7 @@
     
 </div>
 </div>
+
 <div style="display: block;float: left;width:77%;" *ngIf="progress > 0">
     <!-- <div style="display: block;float: left;background: red;height:5px;text-align: center;color: red;"  role="progressbar" [style.width.%]="progress">
         {{progress}}%
@@ -69,12 +78,52 @@
 </div>
 <div style="display: block;float: left;width:100%;">
     <input type="button" class="btn btn-primary" style="margin-right:5px;" [disabled]="_obfservices.ObfCreateForm.invalid" (click)="Saveasdraft()" value="Save as Draft"/>
-    <input type="button" (click)="Prview()" class="btn btn-primary" [disabled]="_obfservices.ObfCreateForm.invalid" value="Preview & Submit"/>
+    <!-- <input type="button" (click)="Prview()" class="btn btn-primary" [disabled]="_obfservices.ObfCreateForm.invalid" value="Preview & Submit"/> -->
 </div>
 <div style="display: block;float: left;width:100%;">
     <a [href]="sanitize(coversheetpath)" target="_blank"   style="margin-right:10px;">Download Coversheet</a>
     <a [href]="sanitize(loipopath)" target="_blank">Download Loi Po </a>
 </div>
+<mat-action-row>
+  <button mat-button class="btn btn-primary" [disabled]="_obfservices.ObfCreateForm.invalid" (click)="nextStep()">Next</button>
+</mat-action-row>
+</mat-expansion-panel>
+<mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Enter Details
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <div style="display: block;float: left;width:100%;">
+  
+  <mat-form-field appearance="fill">
+    <mat-label>Select solution category</mat-label>
+  <mat-select (selectionChange)="onchange($event)">
+    <mat-option *ngFor="let Solution of Solutiongroup" [value]="Solution.Solutioncategory"  >
+      {{Solution.Solutioncategory}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+ <mat-form-field appearance="fill">
+    <mat-label>Select type of service/solution category</mat-label>
+    <mat-select  multiple (selectionChange)="onchange($event)">
+      <mat-option>-- None --</mat-option>
+      <mat-optgroup *ngFor="let group of Solutionservicesarray" [label]="group.Solutioncategory"
+                    >
+        <mat-option *ngFor="let list of group.Serviceslist" [value]="list.value">
+          {{list.viewValue}} 
+        </mat-option>
+      </mat-optgroup>
+    </mat-select>
+  </mat-form-field>
+  </div>
+  <mat-action-row>
+    <button mat-button color="warn" (click)="prevStep()">Previous</button>
+    <button mat-button color="primary" (click)="nextStep()">Next</button>
+  </mat-action-row>
+</mat-expansion-panel>
+</mat-accordion>
 </form>
 <div >
     <ng-template #callAPIDialog>

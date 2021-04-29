@@ -8,6 +8,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatCardModule} from '@angular/material/card';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 @NgModule({
@@ -21,7 +23,9 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatIconModule,
     MatCardModule,
     MatTooltipModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSelectModule,
+    MatExpansionModule
   ],
   exports:[
     MatTableModule,
@@ -31,7 +35,9 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatIconModule,
     MatCardModule,
     MatTooltipModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSelectModule,
+    MatExpansionModule
   ]
 })
 export class MaterialModule { }

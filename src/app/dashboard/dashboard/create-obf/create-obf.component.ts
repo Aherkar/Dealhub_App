@@ -11,11 +11,32 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { TemplateRef } from '@angular/core';
 
+interface Serviceslist {
+  value: string;
+  viewValue: string;
+}
+
+interface Solutionservices {
+  disabled?: boolean;
+  Solutioncategory: string;
+  Serviceslist: Serviceslist[];
+}
+
+interface Solutiongroup {
+  disabled?: boolean;
+  Solutioncategory: string;
+  Solutionservices: Solutionservices[];
+}
+
 @Component({
   selector: 'app-create-obf',
   templateUrl: './create-obf.component.html',
   styleUrls: ['./create-obf.component.scss']
 })
+
+
+
+
 export class CreateOBFComponent implements OnInit {
 
   data: [][];
@@ -34,11 +55,98 @@ ProjectDetails: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('callAPIDialog') callAPIDialog: TemplateRef<any>;
 
+  pokemonControl = new FormControl();
+  Solutionservicesarray:Solutionservices[] =[];
+  Solutiongroup: Solutiongroup[] = [
+    {
+      Solutioncategory: 'Services',
+      Solutionservices: [
+        {Solutioncategory: 'Services',
+        Serviceslist: [{value:"Storage Warehouses",viewValue:"Storage Warehouses"},
+                      {value:"FTL Transportation",viewValue:"FTL Transportation"},
+                      {value:"Express/PTL Transportation",viewValue:"Express/PTL Transportation"},
+                      {value:"First Mile Transportation",viewValue:"First Mile Transportation"},
+                      {value:"First Mile Transportation",viewValue:"First Mile Transportation"},
+                      {value:"Other",viewValue:"Other"},
+                      ]
+        }
+       ]
+    },
+    {
+      Solutioncategory: 'Solutions',
+      Solutionservices: [
+        {Solutioncategory: 'Services',
+        Serviceslist: [{value:"Storage Warehouses",viewValue:"Storage Warehouses"},
+                      {value:"FTL Transportation",viewValue:"FTL Transportation"},
+                      {value:"Express/PTL Transportation",viewValue:"Express/PTL Transportation"},
+                      {value:"First Mile Transportation",viewValue:"First Mile Transportation"},
+                      {value:"First Mile Transportation",viewValue:"First Mile Transportation"},
+                      {value:"Other",viewValue:"Other"}
+                      ]
+        },
+        {
+          Solutioncategory:'Solutions',
+          Serviceslist: [{value:"Sort Center Management",viewValue:"Sort Center Management"},
+          {value:"Pop-up Sort Centers",viewValue:"Pop-up Sort Centers"},
+          {value:"Fulfilment Center Management",viewValue:"Fulfilment Center Management"},
+          {value:"Warehousing Solutions",viewValue:"Warehousing Solutions"},
+          {value:"Other",viewValue:"Other"}
+          ]
+        }
+       ]
+    },
+    {
+      Solutioncategory: 'Integrated Solutions',
+      Solutionservices: [
+        {Solutioncategory: 'Services',
+        Serviceslist: [{value:"Storage Warehouses",viewValue:"Storage Warehouses"},
+                      {value:"FTL Transportation",viewValue:"FTL Transportation"},
+                      {value:"Express/PTL Transportation",viewValue:"Express/PTL Transportation"},
+                      {value:"First Mile Transportation",viewValue:"First Mile Transportation"},
+                      {value:"First Mile Transportation",viewValue:"First Mile Transportation"},
+                      {value:"Other",viewValue:"Other"}
+                      ]
+        },
+        {
+          Solutioncategory:'Solutions',
+          Serviceslist: [{value:"Sort Center Management",viewValue:"Sort Center Management"},
+          {value:"Pop-up Sort Centers",viewValue:"Pop-up Sort Centers"},
+          {value:"Fulfilment Center Management",viewValue:"Fulfilment Center Management"},
+          {value:"Warehousing Solutions",viewValue:"Warehousing Solutions"},
+          {value:"Other",viewValue:"Other"}
+          ]
+        },
+        {
+          Solutioncategory:'Integrated Solutions',
+          Serviceslist: [{value:"Logistics Outsourcing",viewValue:"Logistics Outsourcing"},
+          {value:"Cross Border Logistics",viewValue:"Cross Border Logistics"},
+          {value:"Multi-Modal Logistics",viewValue:"Multi-Modal Logistics"},
+          {value:"Warehousing and Distribution",viewValue:"Warehousing and Distribution"},
+          {value:"Other",viewValue:"Other"}
+          ]
+        }
+       ]
+    }
+  ];
+
 
   constructor(private _dashboardservice:DashboardService,private sanitizer:DomSanitizer,public _obfservices:OBFServices,private dialog:MatDialog) { }
 
+  step = 0;
   ngOnInit(): void {
     this._obfservices.ObfCreateForm.reset();
+  }
+
+  setStep(index: number) {
+    this.step = index;
+  }
+
+  nextStep() {
+    this.step++;
+  }
+
+  prevStep() {
+    this.step--;
   }
 
 
@@ -210,7 +318,8 @@ ProjectDetails: MatTableDataSource<any>;
     this._obfservices.ObfCreateForm.patchValue({Paymentterms: ws.H15.w});
     this._obfservices.ObfCreateForm.patchValue({Assumptionrisks: ws.D17.h});
     this._obfservices.ObfCreateForm.patchValue({Loipo: ws.D18.h});
-     
+    console.log("check form values");
+    console.log(this._obfservices.ObfCreateForm);
     this.data = (XLSX.utils.sheet_to_json(ws, { header: 1 }));
 
      console.log("MAin DATa: "+this.data);
@@ -322,16 +431,16 @@ ProjectDetails: MatTableDataSource<any>;
       alert("Customer name is required");
       return false;
     }
-    else if(this._obfservices.ObfCreateForm.get('Solutioncategory').errors)
-    {
-      alert("Solution category is required");
-      return false;
-    }
-    else if(this._obfservices.ObfCreateForm.get('Otherservicesandcategories').errors)
-    {
-      alert("Other Services and Solutions field is required");
-      return false;
-    }
+    // else if(this._obfservices.ObfCreateForm.get('Solutioncategory').errors)
+    // {
+    //   alert("Solution category is required");
+    //   return false;
+    // }
+    // else if(this._obfservices.ObfCreateForm.get('Otherservicesandcategories').errors)
+    // {
+    //   alert("Other Services and Solutions field is required");
+    //   return false;
+    // }
     else if(this._obfservices.ObfCreateForm.get('Opportunityid').errors)
     {
       alert("Opportunityid is required");
@@ -347,11 +456,11 @@ ProjectDetails: MatTableDataSource<any>;
       alert("Vertical field is required");
       return false;
     }
-    else if(this._obfservices.ObfCreateForm.get('Sector').errors)
-    {
-      alert("Sector field is required");
-      return false;
-    }
+    // else if(this._obfservices.ObfCreateForm.get('Sector').errors)
+    // {
+    //   alert("Sector field is required");
+    //   return false;
+    // }
     else if(this._obfservices.ObfCreateForm.get('Verticalhead').errors)
     {
       alert("Vertical head field is required");
@@ -404,4 +513,17 @@ ProjectDetails: MatTableDataSource<any>;
     }
     return true;
   }
+
+  onchange(evt)
+  {
+    alert("hello world");
+    console.log(evt);
+    var result = this.Solutiongroup.filter(obj => {
+      return obj.Solutioncategory === evt.value;
+    });
+    this.Solutionservicesarray = result[0].Solutionservices;
+   
+    
+  }
+
 }

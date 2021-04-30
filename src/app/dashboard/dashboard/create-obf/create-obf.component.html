@@ -118,11 +118,32 @@
       </mat-optgroup>
     </mat-select>
   </mat-form-field>
-  <input type="text" disabled="true" />
+  <input type="text" formControlName="otherservices"  placeholder="Other Services" />
+  <input type="text" formControlName="othersolutions" placeholder="Other Solutions" />
+  <input type="text" formControlName="otherintegratedsolutions" placeholder="Other Integrated Solutions" />
+  <div style="width:100%;float:left;display:block;">
+    <label>Vertical : </label>{{_obfservices.ObfCreateForm.get('Vertical').value}}
+    <mat-form-field appearance="fill">
+      <mat-label>Select Sector</mat-label>
+    <mat-select (selectionChange)="onsectorchange($event)">
+      <mat-option *ngFor="let Sector of Sectorgrouparray" [value]="Sector.value"  >
+        {{Sector.value}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Select Sub Sector</mat-label>
+  <mat-select>
+    <mat-option *ngFor="let Subsector of Subsecotarray" [value]="Subsector.value"  >
+      {{Subsector.value}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+  </div>
   </div>
   <mat-action-row>
-    <button mat-button color="warn" (click)="prevStep('details')">Previous</button>
-    <button mat-button color="primary" (click)="nextStep('preview')">Next</button>
+    <button mat-button class="btn btn-primary" color="warn" (click)="prevStep('details')">Previous</button>
+    <button mat-button class="btn btn-primary" color="primary" [disabled]="_obfservices.ObfCreateForm.invalid" (click)="nextStep('preview')">Next</button>
   </mat-action-row>
 </mat-expansion-panel>
 </mat-accordion>

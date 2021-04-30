@@ -16,6 +16,17 @@ interface Serviceslist {
   viewValue: string;
 }
 
+interface subsecorlist {
+  value: string;
+  viewValue: string;
+}
+
+interface SectotGroup {
+  value: string;
+  viewValue: string;
+  subsecorlist:subsecorlist[]
+}
+
 class objectlist
 {solutioncategory:string;
   Servicelist:string[] = [];
@@ -58,6 +69,9 @@ export class CreateOBFComponent implements OnInit {
   progress: number = 0;
   progressInfos: any[] = [];
   loiopdisabled:boolean=false;
+  // Otherservicesdisabled:boolean=true;
+  // Othersolutionsdisabled:boolean=true;
+  // Otherintegratedsolutionsdisabled:boolean=true;
   OBFData:any;
 columns:Array<any>;
 displayedColumns:Array<any>;
@@ -68,6 +82,39 @@ ProjectDetails: MatTableDataSource<any>;
 
   pokemonControl = new FormControl();
   Solutionservicesarray:Solutionservices[] =[];
+  Subsecotarray:subsecorlist[] =[];
+  Sectorgrouparray:SectotGroup[] = [
+    {
+      value:'Online Marketplace',
+      viewValue:'Online Marketplace',
+      subsecorlist:[{value:'Multi-category',viewValue:'Multi-category'},
+                    {value:'Single category',viewValue:'Single category'},
+                    {value:'Other',viewValue:'Other'}
+                   ]
+    },
+    {
+      value:'Online Retail',
+      viewValue:'Online Retail',
+      subsecorlist:[{value:'Online Retail',viewValue:'Online Retail'},
+                    {value:'Other',viewValue:'Other'}
+                   ]
+    }
+    ,
+    {
+      value:'Food and Hyperlocal',
+      viewValue:'Food and Hyperlocal',
+      subsecorlist:[{value:'Food and Hyperlocal',viewValue:'Food and Hyperlocal'},
+                    {value:'Other',viewValue:'Other'}
+                   ]
+    },
+    {
+      value:'Other',
+      viewValue:'Other',
+      subsecorlist:[
+                    {value:'Other',viewValue:'Other'}
+                   ]
+    }
+  ];
   Solutiongroup: Solutiongroup[] = [
     {
       Solutioncategory: 'Services',
@@ -160,6 +207,9 @@ ProjectDetails: MatTableDataSource<any>;
       this._obfservices.ObfCreateForm.get('Otherservicesandcategories').setValidators(Validators.required)
       this._obfservices.ObfCreateForm.get('Otherservicesandcategories').updateValueAndValidity();
     }
+    else if(section == "preview"){
+      console.log(this._obfservices.ObfCreateForm.value);
+    }
     this.step++;
   }
 
@@ -247,6 +297,7 @@ ProjectDetails: MatTableDataSource<any>;
   onotherservicesoptionchange(evt,solutioncategory)
   {
     if(evt.isUserInput) {
+      this.disablenableothetinput(evt.source.value,solutioncategory,evt.source.selected);
       if(evt.source.selected)
       {
         if(this.serviceslist.length > 0){
@@ -317,9 +368,50 @@ ProjectDetails: MatTableDataSource<any>;
         }
       }
       console.log(this.serviceslist);
+      this._obfservices.ObfCreateForm.patchValue({Otherservicesandcategories: this.serviceslist});
+      
     }
   }
 
+  disablenableothetinput(value,category,bol)
+  {
+     if(bol)
+     {
+       if(value == "Other")
+       {
+        switch(category)
+        {
+          case "Services":
+           this._obfservices.ObfCreateForm.controls['otherservices'].enable();
+           break;
+           case "Solutions":
+            this._obfservices.ObfCreateForm.controls['othersolutions'].enable();
+            break;
+            case "Integrated Solutions":
+              this._obfservices.ObfCreateForm.controls['otherintegratedsolutions'].enable();
+              break;
+        }
+       }    
+     }
+     else{
+      if(value == "Other")
+      {
+       switch(category)
+       {
+        case "Services":
+          this._obfservices.ObfCreateForm.controls['otherservices'].disable();
+          break;
+          case "Solutions":
+           this._obfservices.ObfCreateForm.controls['othersolutions'].disable();
+           break;
+           case "Integrated Solutions":
+             this._obfservices.ObfCreateForm.controls['otherintegratedsolutions'].disable();
+             break;
+
+       }
+      } 
+     }
+  }
 
   sanitize(url:string){
     return this.sanitizer.bypassSecurityTrustUrl(url);
@@ -693,6 +785,19 @@ ProjectDetails: MatTableDataSource<any>;
       return obj.Solutioncategory === evt.value;
     });
     this.Solutionservicesarray = result[0].Solutionservices;
+    this._obfservices.ObfCreateForm.patchValue({Solutioncategory: evt.value});
+
+
+  }
+
+  onsectorchange(evt)
+  {
+    alert("hello world");
+    console.log(evt);
+    var result = this.Sectorgrouparray.filter(obj => {
+      return obj.value === evt.value;
+    });
+    this.Subsecotarray = result[0].subsecorlist;
 
 
   }

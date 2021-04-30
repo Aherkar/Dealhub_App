@@ -26,7 +26,7 @@ export class SideNaveComponent implements OnInit {
 
   ngOnInit(): void {
     this.config = this.mergeConfig(this.options);
-    this.GetMenus();
+    //this.GetMenus();
   }
   
   mergeConfig(options) {

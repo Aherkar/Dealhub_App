@@ -43,6 +43,9 @@ export class OBFServices {
     Projectbrief:new FormControl("",Validators.required),
     Assumptionrisks:new FormControl("",Validators.required),
     Loipo:new FormControl("",Validators.required),
+    otherservices:new FormControl({value:"",disabled:true}),
+    othersolutions:new FormControl({value:"",disabled:true}),
+    otherintegratedsolutions:new FormControl({value:"",disabled:true}),
     comments:new FormControl("")
    });
 }

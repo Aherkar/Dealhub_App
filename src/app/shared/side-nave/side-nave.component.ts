@@ -53,6 +53,7 @@ export class SideNaveComponent implements OnInit {
 
   GetMenus()
   {
+    debugger;
     this._menumodel._user_code=localStorage.getItem("UserName");
     this._menumodel.token=localStorage.getItem("Token");
     this.menuservice.GetMenus(this._menumodel).subscribe(Result=>{

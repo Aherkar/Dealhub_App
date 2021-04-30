@@ -16,6 +16,17 @@ interface Serviceslist {
   viewValue: string;
 }
 
+class objectlist
+{solutioncategory:string;
+  Servicelist:string[] = [];
+  constructor(soltioncat:string,element:string)
+  {
+    this.solutioncategory = soltioncat;
+    this.Servicelist.push(element);
+  }
+  
+}
+
 interface Solutionservices {
   disabled?: boolean;
   Solutioncategory: string;
@@ -141,12 +152,172 @@ ProjectDetails: MatTableDataSource<any>;
     this.step = index;
   }
 
-  nextStep() {
+  nextStep(section) {
+    if(section == "details")
+    {
+      this._obfservices.ObfCreateForm.get('Solutioncategory').setValidators(Validators.required)
+      this._obfservices.ObfCreateForm.get('Solutioncategory').updateValueAndValidity();
+      this._obfservices.ObfCreateForm.get('Otherservicesandcategories').setValidators(Validators.required)
+      this._obfservices.ObfCreateForm.get('Otherservicesandcategories').updateValueAndValidity();
+    }
     this.step++;
   }
 
-  prevStep() {
+  prevStep(section) {
+    if(section == "details")
+    {
+      this._obfservices.ObfCreateForm.get('Solutioncategory').clearValidators();
+      this._obfservices.ObfCreateForm.get('Solutioncategory').updateValueAndValidity();
+      this._obfservices.ObfCreateForm.get('Otherservicesandcategories').clearValidators();
+      this._obfservices.ObfCreateForm.get('Otherservicesandcategories').updateValueAndValidity();
+    }
     this.step--;
+  }
+
+
+  serviceslist:objectlist[] = [];
+  onotherserviceschange(evt)
+  {
+    this.serviceslist= [];
+
+    console.log("Multiple selection");
+   // console.log(evt);
+    const selectedval = evt.value;
+    selectedval.forEach(element => {
+      this.Solutionservicesarray.forEach(obj =>{
+        obj.Serviceslist.forEach(objinner =>{
+          if(objinner.value == element)
+          { 
+            alert(obj.Solutioncategory);
+            if(this.serviceslist.length > 0){
+              const index = this.serviceslist.findIndex(res=> res.solutioncategory == obj.Solutioncategory);
+              if (index >-1) {
+                const indexnew = this.serviceslist[index].Servicelist.findIndex(newval=> newval == element);
+                if (indexnew >-1) {
+                   
+                    }
+                    else
+                    {
+                      this.serviceslist[index].Servicelist.push(element);
+                    }
+                  }
+                  else
+                  {
+                   // this.serviceslist.push({solutioncategory:obj.Solutioncategory,Servicelist:element});
+                   let servicesobj:objectlist = new objectlist(obj.Solutioncategory,element); 
+                   
+                      this.serviceslist.push(servicesobj);
+                  }
+            // this.serviceslist.forEach(val =>{
+            //         if(val.solutioncategory == obj.Solutioncategory)
+            //         {
+            //           // val.Servicelist.forEach(res =>{
+            //           //       if(res == element)
+            //           //       {}
+            //           //       else{
+            //           //         val.Servicelist.push(element);
+            //           //       }
+            //           // })
+            //         }
+            //         else
+            //         {
+            //           this.serviceslist.push({solutioncategory:obj.Solutioncategory,Servicelist:element});
+            //         }
+            // });
+            }
+            else
+            {
+              //this.serviceslist.push({solutioncategory:obj.Solutioncategory,Servicelist:element});
+                //  servicesobj.solutioncategory = obj.Solutioncategory;
+                //    servicesobj.Servicelist.push(element);
+                //     this.serviceslist.push(servicesobj);
+                let servicesobj:objectlist = new objectlist(obj.Solutioncategory,element); 
+                   
+                      this.serviceslist.push(servicesobj);
+            }
+          }
+        }
+        );
+      });
+    });
+
+    console.log(this.serviceslist);
+  }
+
+  onotherservicesoptionchange(evt,solutioncategory)
+  {
+    if(evt.isUserInput) {
+      if(evt.source.selected)
+      {
+        if(this.serviceslist.length > 0){
+          const index = this.serviceslist.findIndex(res=> res.solutioncategory == solutioncategory);
+          if (index >-1) {
+            const indexnew = this.serviceslist[index].Servicelist.findIndex(newval=> newval == evt.source.value);
+            if (indexnew >-1) {
+               
+                }
+                else
+                {
+                  this.serviceslist[index].Servicelist.push(evt.source.value);
+                }
+              }
+              else
+              {
+               // this.serviceslist.push({solutioncategory:obj.Solutioncategory,Servicelist:element});
+               let servicesobj:objectlist = new objectlist(solutioncategory,evt.source.value); 
+               
+                  this.serviceslist.push(servicesobj);
+              }
+        
+        }
+        else
+        {
+          
+            let servicesobj:objectlist = new objectlist(solutioncategory,evt.source.value); 
+               
+                  this.serviceslist.push(servicesobj);
+        }
+      }
+      else
+      {
+        if(this.serviceslist.length > 0){
+          const index = this.serviceslist.findIndex(res=> res.solutioncategory == solutioncategory);
+          if (index >-1) {
+            if(this.serviceslist[index].Servicelist.length > 0)
+            {
+              const indexnew = this.serviceslist[index].Servicelist.findIndex(newval=> newval == evt.source.value);
+              if (indexnew >-1) {
+                this.serviceslist[index].Servicelist.splice(this.serviceslist[index].Servicelist.indexOf(evt.source.value), 1);
+                if(this.serviceslist[index].Servicelist.length > 0)
+                {
+                }
+                else{
+                  this.serviceslist.splice(index,1);
+                }
+                  }
+                  else{
+                    if(this.serviceslist[index].Servicelist.length > 0)
+                {
+                }
+                else{
+                  this.serviceslist.splice(index,1);
+                }
+                  }
+            }
+            else{
+              this.serviceslist.splice(index,1);
+            }
+           
+              }
+              else
+              {
+               
+              }
+        
+        }
+      }
+      console.log(this.serviceslist);
+    }
   }
 
 
@@ -161,10 +332,10 @@ ProjectDetails: MatTableDataSource<any>;
   message: string[] = [];
 
 	onSelect(event,types) {
-    
+
     if(types == "coversheet")
        {
-        
+
         if(this.coversheetfiles.length > 1)
         {
           alert("Kindly upload only one Coversheet file");
@@ -175,7 +346,7 @@ ProjectDetails: MatTableDataSource<any>;
         }
         // this.files = this.coversheetfiles;
         this.updatedatafromcoversheet(event);
-        
+
        }
        else if(types == "loipo")
        {
@@ -195,7 +366,7 @@ ProjectDetails: MatTableDataSource<any>;
         // this.files = this.supportfiles;
        }
 		// this.files.push(...event.addedFiles);
-     
+
 	}
 
   uploadfiles(files:File[],types)
@@ -212,7 +383,7 @@ ProjectDetails: MatTableDataSource<any>;
 
     this._dashboardservice.uploadImage(files[i]).subscribe(
       event => {
-        
+
         if(event.type === HttpEventType.UploadProgress)
         {
           console.log('Upload Progress: '+Math.round(event.loaded/event.total * 100) +"%");
@@ -226,14 +397,14 @@ ProjectDetails: MatTableDataSource<any>;
       }
       debugger;
       path=path.split('"').join('');
-      path = path.substring(0,path.length -1); 
+      path = path.substring(0,path.length -1);
       consolidatedpath += path +",";
       consolidatedpath = consolidatedpath.substring(0,consolidatedpath.length -1);
       if(types == "coversheet")
       {
        this.coversheetpath = path;
        this._obfservices.ObfCreateForm.patchValue({coversheet: path});
-       
+
       }
       else if(types == "loipo")
       {
@@ -278,7 +449,7 @@ ProjectDetails: MatTableDataSource<any>;
   {
     console.log(evt);
    // const target : DataTransfer =  <DataTransfer>(evt.target);
-    
+
     if (evt.addedFiles.length !== 1) throw new Error('Cannot use multiple files');
 
     const reader: FileReader = new FileReader();
@@ -343,7 +514,7 @@ ProjectDetails: MatTableDataSource<any>;
     //     {
     //     console.log(event);
     //   }
-        
+
     //   }
     // );
        }
@@ -386,10 +557,10 @@ ProjectDetails: MatTableDataSource<any>;
   //     }, [])
   //   // Describe the columns for <mat-table>.
   //   this.columns = columns.map(column => {
-  //     return { 
+  //     return {
   //       columnDef: column,
   //       header: column.replace("_"," "),
-  //       cell: (element: any) => `${element[column] ? element[column] : ``}`     
+  //       cell: (element: any) => `${element[column] ? element[column] : ``}`
   //     }
   //   })
   //   this.displayedColumns = this.columns.map(c => c.columnDef);
@@ -409,7 +580,7 @@ ProjectDetails: MatTableDataSource<any>;
       disableClose: true,
      // data: { campaignId: this.params.id }
   })
-    
+
     //let dialogRef = this.dialog.open(this.callAPIDialog);
   }
 
@@ -418,7 +589,7 @@ ProjectDetails: MatTableDataSource<any>;
     this._obfservices.ObfCreateForm.setValue(this._obfservices.ObfCreateForm.value);
     this.dialog.closeAll();
   }
-   
+
   validateform()
   {
     if(this._obfservices.ObfCreateForm.get('Projectname').errors)
@@ -522,8 +693,8 @@ ProjectDetails: MatTableDataSource<any>;
       return obj.Solutioncategory === evt.value;
     });
     this.Solutionservicesarray = result[0].Solutionservices;
-   
-    
+
+
   }
 
 }

@@ -35,6 +35,18 @@ class SaveServiceParameter{
 //   Servicelist:elementcls[] = [];
 // }
 
+class obfsolutionandservices
+{
+  _dh_id:number;
+  _dh_header_id:number;
+  _fname:string;
+  _fpath:string;
+  _created_by:string;
+  Services:SaveServiceParameter[] =[];
+  _Sector_Id:number;
+  _SubSector_Id:number;
+}
+
 
 class obf{
   _dh_id:number;
@@ -83,6 +95,7 @@ export class OBFServices {
 
   constructor(private http:HttpClient) { }
   obfmodel:obf = new obf();
+  obfsolutionandservices:obfsolutionandservices = new obfsolutionandservices();
   SaveAttachmentParameter:SaveAttachmentParameter = new SaveAttachmentParameter();
   ObfCreateForm = new FormGroup({
     coversheet : new FormControl("",Validators.required),
@@ -140,6 +153,12 @@ export class OBFServices {
   createobf(model:obf): Observable<any> {  
     const httpOptions = { headers: new HttpHeaders({ 'No-Auth':'True','Content-Type': 'application/json'}) };  
     return this.http.post<any>("http://localhost:52229/Api/Manage_OBF/CreateOBF",model ,
+       httpOptions);  
+  }
+
+  savesolutionandservices(model:obfsolutionandservices): Observable<any> {  
+    const httpOptions = { headers: new HttpHeaders({ 'No-Auth':'True','Content-Type': 'application/json'}) };  
+    return this.http.post<any>("http://localhost:52229/Api/Manage_OBF/SaveServiceSolutionSector",model ,
        httpOptions);  
   }
 }

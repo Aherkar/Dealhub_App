@@ -77,7 +77,7 @@
   </ul>
 </div>
 <div style="display: block;float: left;width:100%;">
-    <input type="button" class="btn btn-primary" style="margin-right:5px;" [disabled]="_obfservices.ObfCreateForm.invalid" (click)="Saveasdraft()" value="Save as Draft"/>
+    <input type="button" class="btn btn-primary" style="margin-right:5px;" [disabled]="_obfservices.ObfCreateForm.invalid" (click)="Saveasdraft('upload')" value="Save as Draft"/>
     <!-- <input type="button" (click)="Prview()" class="btn btn-primary" [disabled]="_obfservices.ObfCreateForm.invalid" value="Preview & Submit"/> -->
 </div>
 <div style="display: block;float: left;width:100%;">
@@ -98,8 +98,8 @@
   
   <mat-form-field appearance="fill">
     <mat-label>Select solution category</mat-label>
-  <mat-select (selectionChange)="onchange($event)">
-    <mat-option *ngFor="let Solution of Solutiongroup" [value]="Solution.Solutioncategory"  >
+  <mat-select >
+    <mat-option *ngFor="let Solution of Solutiongroup" [value]="Solution.value"  (onSelectionChange)="onchange($event,Solution.Solutioncategory)" >
       {{Solution.Solutioncategory}}
     </mat-option>
   </mat-select>
@@ -112,39 +112,85 @@
       <mat-option>-- None --</mat-option>
       <mat-optgroup *ngFor="let group of Solutionservicesarray" [label]="group.Solutioncategory"
                     >
-        <mat-option *ngFor="let list of group.Serviceslist" (onSelectionChange)="onotherservicesoptionchange($event,group.Solutioncategory)" [value]="list.value">
+        <mat-option *ngFor="let list of group.Serviceslist" (onSelectionChange)="onotherservicesoptionchange($event,list.viewValue,group.Solutioncategory,group.value)" [value]="list.value">
           {{list.viewValue}} 
         </mat-option>
       </mat-optgroup>
     </mat-select>
   </mat-form-field>
-  <input type="text" formControlName="otherservices" style="margin-left: 10px;"  placeholder="Other Services" />
-  <input type="text" formControlName="othersolutions" style="margin-left: 10px;" placeholder="Other Solutions" />
-  <input type="text" formControlName="otherintegratedsolutions" style="margin-left: 10px;" placeholder="Other Integrated Solutions" />
+  <input type="text" formControlName="otherservices" id="abc" #otherservices style="margin-left: 10px;" (change)="otherssave('services')" placeholder="Other Services" />
+  <input type="text" formControlName="othersolutions" style="margin-left: 10px;" (change)="otherssave('solution')" placeholder="Other Solutions" />
+  <input type="text" formControlName="otherintegratedsolutions" style="margin-left: 10px;" (change)="otherssave('integratedsolution')" placeholder="Other Integrated Solutions" />
   <div style="width:100%;float:left;display:block;">
     <label>Vertical : </label>{{_obfservices.ObfCreateForm.get('Vertical').value}}
     <mat-form-field appearance="fill">
       <mat-label>Select Sector</mat-label>
-    <mat-select (selectionChange)="onsectorchange($event)">
-      <mat-option *ngFor="let Sector of Sectorgrouparray" [value]="Sector.value"  >
-        {{Sector.value}}
+    <mat-select (selectionChange)="onsectorchange($event)" formControlName="Sector">
+      <mat-option *ngFor="let Sector of sectorlist" [value]="Sector.value"  >
+        {{Sector.viewValue}}
       </mat-option>
     </mat-select>
   </mat-form-field>
   <mat-form-field appearance="fill">
     <mat-label>Select Sub Sector</mat-label>
-  <mat-select>
-    <mat-option *ngFor="let Subsector of Subsecotarray" [value]="Subsector.value"  >
-      {{Subsector.value}}
+  <mat-select (selectionChange)="onsubsectorchange($event)" formControlName="Subsector">
+    <mat-option *ngFor="let Subsector of subsectorlisdisplay" [value]="Subsector.value"  >
+      {{Subsector.viewValue}}
     </mat-option>
   </mat-select>
 </mat-form-field>
   </div>
   </div>
   <mat-action-row>
+    <input type="button" class="btn btn-primary" style="margin-right:5px;" [disabled]="_obfservices.ObfCreateForm.invalid" (click)="Saveasdraft('details')" value="Save as Draft"/>
     <button mat-button class="btn btn-primary" color="warn" (click)="prevStep('details')">Previous</button>
     <button mat-button class="btn btn-primary" color="primary" [disabled]="_obfservices.ObfCreateForm.invalid" (click)="nextStep('preview')">Next</button>
   </mat-action-row>
+</mat-expansion-panel>
+<mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Preview OBF
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <div style="float:left;width:100%;display:block;">
+    <div style="display:block;float:left;width:100%;background: #4e65d796;">
+      <span><label>Project Name</label>{{_obfservices.ObfCreateForm.get('Projectname').value}}</span>
+      <span><label>Project Type</label>{{_obfservices.ObfCreateForm.get('Projecttype').value}}</span>
+      <span><label>Opportunity Id</label>{{_obfservices.ObfCreateForm.get('Opportunityid').value}}</span>
+      <span><label>Location / State</label>{{_obfservices.ObfCreateForm.get('State').value}}</span>
+      <span><label>Vertical</label>{{_obfservices.ObfCreateForm.get('Vertical').value}}</span>
+      <span><label>Vertical Head</label>{{_obfservices.ObfCreateForm.get('Verticalhead').value}}</span>
+      <span><label>Created on</label>{{_obfservices.ObfCreateForm.get('Createddate').value}}</span>
+      <span><label>SAP IO number</label>{{_obfservices.ObfCreateForm.get('Sapio').value}}</span>
+      <span><label>Customer Name</label>{{_obfservices.ObfCreateForm.get('Customername').value}}</span>
+      <span><label>SAP Customer Code</label>{{_obfservices.ObfCreateForm.get('Sapcustomercode').value}}</span>
+      <span><label>Project Primary Location</label>{{_obfservices.ObfCreateForm.get('Projectprimarylocation').value}}</span>
+      <span><label>Service/Solution/Integrated Solution type </label>{{_obfservices.ObfCreateForm.get('Solutiontype').value}}</span>
+  </div>
+  <div style="display:block;float:left;width:100%;background: #b6b6b896;">
+      <span><label>Total Revenue (Cr)</label>{{_obfservices.ObfCreateForm.get('Totalrevenue').value}}</span>
+      <span><label>Total Cost (Cr)</label>{{_obfservices.ObfCreateForm.get('Totalcost').value}}</span>
+      <span><label>Total Margin</label>{{_obfservices.ObfCreateForm.get('Totalmargin').value}}</span>
+      <span><label>Total Project Life</label>{{_obfservices.ObfCreateForm.get('Totalprojectlife').value}}</span>
+      <span><label>EBT %</label>{{_obfservices.ObfCreateForm.get('EBT').value}}</span>
+      <span><label>Capex Cr</label>{{_obfservices.ObfCreateForm.get('Capex').value}}</span>
+      <span><label>IIR % Surplus Cash</label>{{_obfservices.ObfCreateForm.get('IRRsurpluscash').value}}</span>
+      <span><label>IIR % Borrowed Fund</label>{{_obfservices.ObfCreateForm.get('IRRborrowedfund').value}}</span>
+      <span><label>Payment Terms</label>{{_obfservices.ObfCreateForm.get('Paymentterms').value}}</span>
+  </div>
+    <div>Project Date:{{_obfservices.ObfCreateForm.get('Projectdate').value}}</div>
+    <div>Project Brief:{{_obfservices.ObfCreateForm.get('Projectbrief').value}} </div>
+    <div>Assumption & Risk:{{_obfservices.ObfCreateForm.get('Assumptionrisks').value}} </div>
+    <div>LOI/Po:{{_obfservices.ObfCreateForm.get('Loipo').value}}</div>
+    <div>
+      <input type="text" placeholder="Enter Comment" style="height:180px;" [value]="_obfservices.ObfCreateForm.get('comments').value"/>
+      </div>
+      <div>
+          <div  class="sb_buttion" (click)="EditOBF()"><button>Edit</button></div>
+          <div  class="sb_buttion"><button>Submit</button></div>
+      </div>
+  </div>
 </mat-expansion-panel>
 </mat-accordion>
 </form>

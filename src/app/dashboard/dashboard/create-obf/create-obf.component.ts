@@ -1,5 +1,5 @@
-import { HttpEventType } from '@angular/common/http';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { DashboardService } from '../../dashboard.service';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -10,10 +10,20 @@ import {​​​​​​​​ MatDialog }​​​​​​​​ from'@angul
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { TemplateRef } from '@angular/core';
+import { ThrowStmt } from '@angular/compiler';
+
 
 interface Serviceslist {
   value: string;
   viewValue: string;
+}
+
+interface Verticalhead{
+  value:number;
+  viewValue:string;
+  vertical_head_id:number;
+  vertical_head_name:string;
+  tablename:string;
 }
 
 interface subsecorlist {
@@ -27,27 +37,102 @@ interface SectotGroup {
   subsecorlist:subsecorlist[]
 }
 
+interface sectors{
+  value: number;
+  viewValue: string;
+  tablename:string;
+}
+
+interface verticallist{
+  value: number;
+  viewValue: string;
+  tablename:string;
+}
+
+interface subsectors{
+  Sector_Id: number;
+  Sector_Name: string;
+  tablename:string;
+  value:number;
+  viewValue:string;
+}
+
+class SaveAttachmentParameter{
+  _dh_id:number;
+  _dh_header_id:number;
+  _fname:string;
+  _fpath:string;
+  _created_by:string;
+  _description:string;
+}
+
+// class objectlist
+// {solutioncategory:string;
+//   Servicelist:string[] = [];
+//   constructor(soltioncat:string,element:string)
+//   {
+//     this.solutioncategory = soltioncat;
+//     this.Servicelist.push(element);
+//   }
+  
+// }
+class elementcls
+{
+   value:string;
+   viewValue:string;
+   constructor(val:string,viewval:string)
+   {
+    this.value = val;
+    this.viewValue = viewval;
+   }
+}
+
 class objectlist
 {solutioncategory:string;
-  Servicelist:string[] = [];
-  constructor(soltioncat:string,element:string)
+ value:string;
+  Servicelist:elementcls[] = [];
+  constructor(soltioncat:string,solval:string,element:elementcls)
   {
     this.solutioncategory = soltioncat;
+   this.value = solval;
     this.Servicelist.push(element);
   }
   
 }
 
+class Serviceslist{
+  value:string;
+  viewValue:string;
+  constructor(val:string,viewval:string)
+   {
+    this.value = val;
+    this.viewValue = viewval;
+   }
+}
+
+class SaveServiceParameter{
+  Solutioncategory:string;
+  value:string;
+  Serviceslist:Serviceslist[] = [];
+  constructor(soltioncat:string,solval:string,element:Serviceslist)
+  {
+    this.Solutioncategory = soltioncat;
+   this.value = solval;
+    this.Serviceslist.push(element);
+  }
+}
+
 interface Solutionservices {
-  disabled?: boolean;
   Solutioncategory: string;
+  value:string;
   Serviceslist: Serviceslist[];
 }
 
 interface Solutiongroup {
-  disabled?: boolean;
   Solutioncategory: string;
-  Solutionservices: Solutionservices[];
+  Solutionservices: Solutionservices[],
+  value:string;
+  viewValue:string;
 }
 
 @Component({
@@ -68,7 +153,9 @@ export class CreateOBFComponent implements OnInit {
   Comments:string="";
   progress: number = 0;
   progressInfos: any[] = [];
+  verticallist:verticallist[]=[];
   loiopdisabled:boolean=false;
+  Verticalheadlist:Verticalhead[];
   // Otherservicesdisabled:boolean=true;
   // Othersolutionsdisabled:boolean=true;
   // Otherintegratedsolutionsdisabled:boolean=true;
@@ -115,84 +202,52 @@ ProjectDetails: MatTableDataSource<any>;
                    ]
     }
   ];
-  Solutiongroup: Solutiongroup[] = [
-    {
-      Solutioncategory: 'Services',
-      Solutionservices: [
-        {Solutioncategory: 'Services',
-        Serviceslist: [{value:"Storage Warehouses",viewValue:"Storage Warehouses"},
-                      {value:"FTL Transportation",viewValue:"FTL Transportation"},
-                      {value:"Express/PTL Transportation",viewValue:"Express/PTL Transportation"},
-                      {value:"First Mile Transportation",viewValue:"First Mile Transportation"},
-                      {value:"First Mile Transportation",viewValue:"First Mile Transportation"},
-                      {value:"Other",viewValue:"Other"},
-                      ]
-        }
-       ]
-    },
-    {
-      Solutioncategory: 'Solutions',
-      Solutionservices: [
-        {Solutioncategory: 'Services',
-        Serviceslist: [{value:"Storage Warehouses",viewValue:"Storage Warehouses"},
-                      {value:"FTL Transportation",viewValue:"FTL Transportation"},
-                      {value:"Express/PTL Transportation",viewValue:"Express/PTL Transportation"},
-                      {value:"First Mile Transportation",viewValue:"First Mile Transportation"},
-                      {value:"First Mile Transportation",viewValue:"First Mile Transportation"},
-                      {value:"Other",viewValue:"Other"}
-                      ]
-        },
-        {
-          Solutioncategory:'Solutions',
-          Serviceslist: [{value:"Sort Center Management",viewValue:"Sort Center Management"},
-          {value:"Pop-up Sort Centers",viewValue:"Pop-up Sort Centers"},
-          {value:"Fulfilment Center Management",viewValue:"Fulfilment Center Management"},
-          {value:"Warehousing Solutions",viewValue:"Warehousing Solutions"},
-          {value:"Other",viewValue:"Other"}
-          ]
-        }
-       ]
-    },
-    {
-      Solutioncategory: 'Integrated Solutions',
-      Solutionservices: [
-        {Solutioncategory: 'Services',
-        Serviceslist: [{value:"Storage Warehouses",viewValue:"Storage Warehouses"},
-                      {value:"FTL Transportation",viewValue:"FTL Transportation"},
-                      {value:"Express/PTL Transportation",viewValue:"Express/PTL Transportation"},
-                      {value:"First Mile Transportation",viewValue:"First Mile Transportation"},
-                      {value:"First Mile Transportation",viewValue:"First Mile Transportation"},
-                      {value:"Other",viewValue:"Other"}
-                      ]
-        },
-        {
-          Solutioncategory:'Solutions',
-          Serviceslist: [{value:"Sort Center Management",viewValue:"Sort Center Management"},
-          {value:"Pop-up Sort Centers",viewValue:"Pop-up Sort Centers"},
-          {value:"Fulfilment Center Management",viewValue:"Fulfilment Center Management"},
-          {value:"Warehousing Solutions",viewValue:"Warehousing Solutions"},
-          {value:"Other",viewValue:"Other"}
-          ]
-        },
-        {
-          Solutioncategory:'Integrated Solutions',
-          Serviceslist: [{value:"Logistics Outsourcing",viewValue:"Logistics Outsourcing"},
-          {value:"Cross Border Logistics",viewValue:"Cross Border Logistics"},
-          {value:"Multi-Modal Logistics",viewValue:"Multi-Modal Logistics"},
-          {value:"Warehousing and Distribution",viewValue:"Warehousing and Distribution"},
-          {value:"Other",viewValue:"Other"}
-          ]
-        }
-       ]
-    }
-  ];
+  Solutiongroup: Solutiongroup[] =[];
 
 
   constructor(private _dashboardservice:DashboardService,private sanitizer:DomSanitizer,public _obfservices:OBFServices,private dialog:MatDialog) { }
 
   step = 0;
+   sectorlist:sectors[] = [];
+   subsectorlist:subsectors[] = [];
   ngOnInit(): void {
     this._obfservices.ObfCreateForm.reset();
+    this._obfservices.obfmodel._dh_id =0;
+    this._obfservices.obfmodel._dh_header_id =0;
+    this.getcreateobfmasters();
+    this.getsolutionmaster();
+  }
+
+getsolutionmaster()
+{
+this._obfservices.getsolutionmaster().subscribe(data =>{
+  let res = JSON.parse(data);
+  console.log("get solution masters");
+  console.log(res);
+  this.Solutiongroup= res;
+},
+(error:HttpErrorResponse)=>{
+  alert(error.message);
+}
+);
+}
+
+  getcreateobfmasters()
+  {
+    this._obfservices.GetCreateOBFMasters(localStorage.getItem('UserName')).subscribe(data =>{
+      let res = JSON.parse(data);
+       console.log(Object.keys(res) );
+       console.log(res.sectors);
+       console.log(res.subsector);
+       console.log("Vertical Master");
+       console.log(res.vertical);
+       console.log("Vertical head Master");
+       console.log(res.verticalhead);
+       this.sectorlist = res.sectors;
+       this.subsectorlist = res.subsector;
+       this.verticallist =res.vertical;
+       this.Verticalheadlist = res.verticalhead;
+ });
   }
 
   setStep(index: number) {
@@ -206,8 +261,15 @@ ProjectDetails: MatTableDataSource<any>;
       this._obfservices.ObfCreateForm.get('Solutioncategory').updateValueAndValidity();
       this._obfservices.ObfCreateForm.get('Otherservicesandcategories').setValidators(Validators.required)
       this._obfservices.ObfCreateForm.get('Otherservicesandcategories').updateValueAndValidity();
+
+      this._obfservices.ObfCreateForm.get('Sector').setValidators(Validators.required)
+      this._obfservices.ObfCreateForm.get('Sector').updateValueAndValidity();
+      this._obfservices.ObfCreateForm.get('Subsector').setValidators(Validators.required)
+      this._obfservices.ObfCreateForm.get('Subsector').updateValueAndValidity();
+
     }
     else if(section == "preview"){
+      this.OBFData = this._obfservices.ObfCreateForm.getRawValue();
       console.log(this._obfservices.ObfCreateForm.value);
     }
     this.step++;
@@ -225,97 +287,33 @@ ProjectDetails: MatTableDataSource<any>;
   }
 
 
-  serviceslist:objectlist[] = [];
-  onotherserviceschange(evt)
-  {
-    this.serviceslist= [];
-
-    console.log("Multiple selection");
-   // console.log(evt);
-    const selectedval = evt.value;
-    selectedval.forEach(element => {
-      this.Solutionservicesarray.forEach(obj =>{
-        obj.Serviceslist.forEach(objinner =>{
-          if(objinner.value == element)
-          { 
-            alert(obj.Solutioncategory);
-            if(this.serviceslist.length > 0){
-              const index = this.serviceslist.findIndex(res=> res.solutioncategory == obj.Solutioncategory);
-              if (index >-1) {
-                const indexnew = this.serviceslist[index].Servicelist.findIndex(newval=> newval == element);
-                if (indexnew >-1) {
-                   
-                    }
-                    else
-                    {
-                      this.serviceslist[index].Servicelist.push(element);
-                    }
-                  }
-                  else
-                  {
-                   // this.serviceslist.push({solutioncategory:obj.Solutioncategory,Servicelist:element});
-                   let servicesobj:objectlist = new objectlist(obj.Solutioncategory,element); 
-                   
-                      this.serviceslist.push(servicesobj);
-                  }
-            // this.serviceslist.forEach(val =>{
-            //         if(val.solutioncategory == obj.Solutioncategory)
-            //         {
-            //           // val.Servicelist.forEach(res =>{
-            //           //       if(res == element)
-            //           //       {}
-            //           //       else{
-            //           //         val.Servicelist.push(element);
-            //           //       }
-            //           // })
-            //         }
-            //         else
-            //         {
-            //           this.serviceslist.push({solutioncategory:obj.Solutioncategory,Servicelist:element});
-            //         }
-            // });
-            }
-            else
-            {
-              //this.serviceslist.push({solutioncategory:obj.Solutioncategory,Servicelist:element});
-                //  servicesobj.solutioncategory = obj.Solutioncategory;
-                //    servicesobj.Servicelist.push(element);
-                //     this.serviceslist.push(servicesobj);
-                let servicesobj:objectlist = new objectlist(obj.Solutioncategory,element); 
-                   
-                      this.serviceslist.push(servicesobj);
-            }
-          }
-        }
-        );
-      });
-    });
-
-    console.log(this.serviceslist);
-  }
-
-  onotherservicesoptionchange(evt,solutioncategory)
+  serviceslist:SaveServiceParameter[] = [];
+  
+  onotherservicesoptionchange(evt,viewValue,solutioncategory,solvalue)
   {
     if(evt.isUserInput) {
       this.disablenableothetinput(evt.source.value,solutioncategory,evt.source.selected);
       if(evt.source.selected)
       {
         if(this.serviceslist.length > 0){
-          const index = this.serviceslist.findIndex(res=> res.solutioncategory == solutioncategory);
+          const index = this.serviceslist.findIndex(res=> res.Solutioncategory == solutioncategory);
           if (index >-1) {
-            const indexnew = this.serviceslist[index].Servicelist.findIndex(newval=> newval == evt.source.value);
+            const indexnew = this.serviceslist[index].Serviceslist.findIndex(newval=> newval.value == evt.source.value);
             if (indexnew >-1) {
                
                 }
                 else
                 {
-                  this.serviceslist[index].Servicelist.push(evt.source.value);
+                  let elements:Serviceslist = new Serviceslist(evt.source.value,viewValue);
+                  this.serviceslist[index].Serviceslist.push(elements);
                 }
               }
               else
               {
+
                // this.serviceslist.push({solutioncategory:obj.Solutioncategory,Servicelist:element});
-               let servicesobj:objectlist = new objectlist(solutioncategory,evt.source.value); 
+               let elements:Serviceslist = new Serviceslist(evt.source.value,viewValue);
+               let servicesobj:SaveServiceParameter = new SaveServiceParameter(solutioncategory,solvalue,elements); 
                
                   this.serviceslist.push(servicesobj);
               }
@@ -324,7 +322,8 @@ ProjectDetails: MatTableDataSource<any>;
         else
         {
           
-            let servicesobj:objectlist = new objectlist(solutioncategory,evt.source.value); 
+          let elements:Serviceslist = new Serviceslist(evt.source.value,viewValue);
+          let servicesobj:SaveServiceParameter = new SaveServiceParameter(solutioncategory,solvalue,elements); 
                
                   this.serviceslist.push(servicesobj);
         }
@@ -332,14 +331,29 @@ ProjectDetails: MatTableDataSource<any>;
       else
       {
         if(this.serviceslist.length > 0){
-          const index = this.serviceslist.findIndex(res=> res.solutioncategory == solutioncategory);
+          const index = this.serviceslist.findIndex(res=> res.Solutioncategory == solutioncategory);
           if (index >-1) {
-            if(this.serviceslist[index].Servicelist.length > 0)
+            if(this.serviceslist[index].Serviceslist.length > 0)
             {
-              const indexnew = this.serviceslist[index].Servicelist.findIndex(newval=> newval == evt.source.value);
+              const indexnew = this.serviceslist[index].Serviceslist.findIndex(newval=> newval.value == evt.source.value);
               if (indexnew >-1) {
-                this.serviceslist[index].Servicelist.splice(this.serviceslist[index].Servicelist.indexOf(evt.source.value), 1);
-                if(this.serviceslist[index].Servicelist.length > 0)
+                this.serviceslist[index].Serviceslist.splice(indexnew, 1);
+                 if(evt.source.value == "10" || evt.source.value == "21" || evt.source.value == "29")
+                {
+                  let val:any = "0";
+                  this.serviceslist[index].Serviceslist.splice(this.serviceslist[index].Serviceslist.indexOf(val), 1);
+                  if(solutioncategory == "Services")
+                  {
+                    this._obfservices.ObfCreateForm.patchValue({otherservices: ""});
+                  }
+                  else if(solutioncategory == "Solutions"){
+                    this._obfservices.ObfCreateForm.patchValue({othersolutions: ""});
+                  }
+                  else if(solutioncategory == "Integrated Solutions"){
+                    this._obfservices.ObfCreateForm.patchValue({otherintegratedsolutions: ""});
+                  }
+                }
+                if(this.serviceslist[index].Serviceslist.length > 0)
                 {
                 }
                 else{
@@ -347,7 +361,7 @@ ProjectDetails: MatTableDataSource<any>;
                 }
                   }
                   else{
-                    if(this.serviceslist[index].Servicelist.length > 0)
+                    if(this.serviceslist[index].Serviceslist.length > 0)
                 {
                 }
                 else{
@@ -367,8 +381,10 @@ ProjectDetails: MatTableDataSource<any>;
         
         }
       }
+      console.log("service list called");
       console.log(this.serviceslist);
       this._obfservices.ObfCreateForm.patchValue({Otherservicesandcategories: this.serviceslist});
+      this._obfservices.obfmodel.Services = this.serviceslist;
       
     }
   }
@@ -377,7 +393,7 @@ ProjectDetails: MatTableDataSource<any>;
   {
      if(bol)
      {
-       if(value == "Other")
+       if(value == "10" || value == "21"  || value == "29")
        {
         switch(category)
         {
@@ -394,7 +410,7 @@ ProjectDetails: MatTableDataSource<any>;
        }    
      }
      else{
-      if(value == "Other")
+      if(value == "10" || value == "21"  || value == "29")
       {
        switch(category)
        {
@@ -460,7 +476,7 @@ ProjectDetails: MatTableDataSource<any>;
 		// this.files.push(...event.addedFiles);
 
 	}
-
+  SaveAttachmentParameter:SaveAttachmentParameter;
   uploadfiles(files:File[],types)
   {
     this.progressInfos = [];
@@ -472,7 +488,7 @@ ProjectDetails: MatTableDataSource<any>;
     {
     for (let i = 0; i < files.length; i++) {
       this.progressInfos[i] = { value: 0, fileName: files[i].name };
-
+      path="";
     this._dashboardservice.uploadImage(files[i]).subscribe(
       event => {
 
@@ -486,28 +502,43 @@ ProjectDetails: MatTableDataSource<any>;
         {
         console.log(event.body);
         path = JSON.stringify(event.body);
+        path=path.split('"').join('');
+        path = path.substring(0,path.length -1);
+        consolidatedpath += path +",";
+        consolidatedpath = consolidatedpath.substring(0,consolidatedpath.length -1);
+         this.SaveAttachmentParameter = new SaveAttachmentParameter();
+        if(path != ""){
+        if(types == "coversheet")
+        {
+         this.coversheetpath = path;
+         this._obfservices.ObfCreateForm.patchValue({coversheet: path});
+         this._obfservices.obfmodel._fname =  files[i].name;
+         this._obfservices.obfmodel._fpath =  path;
+         this._obfservices.obfmodel._created_by =  localStorage.getItem('UserName');
+  
+        }
+        else if(types == "loipo")
+        {
+         this.loipopath = path;
+         this._obfservices.ObfCreateForm.patchValue({Loiposheet: path});
+         this.SaveAttachmentParameter._fname= files[i].name; 
+         this.SaveAttachmentParameter._fpath = path;
+         this.SaveAttachmentParameter._description = "loi";
+         this._obfservices.obfmodel.Attachments.push(this.SaveAttachmentParameter);
+         this._obfservices.obfmodel._is_loi_po_uploaded = "yes";
+        }
+        else if(types == "support")
+        {
+          this.supportdocpath = path;
+          this._obfservices.ObfCreateForm.patchValue({Supportpath: path});
+          this.SaveAttachmentParameter._fname= files[i].name; 
+         this.SaveAttachmentParameter._fpath = path;
+         this.SaveAttachmentParameter._description = "support";
+         this._obfservices.obfmodel.Attachments.push(this.SaveAttachmentParameter);
+        }
       }
-      debugger;
-      path=path.split('"').join('');
-      path = path.substring(0,path.length -1);
-      consolidatedpath += path +",";
-      consolidatedpath = consolidatedpath.substring(0,consolidatedpath.length -1);
-      if(types == "coversheet")
-      {
-       this.coversheetpath = path;
-       this._obfservices.ObfCreateForm.patchValue({coversheet: path});
-
       }
-      else if(types == "loipo")
-      {
-       this.loipopath = path;
-       this._obfservices.ObfCreateForm.patchValue({Loiposheet: path});
-      }
-      else if(types == "support")
-      {
-        this.supportdocpath = path;
-        this._obfservices.ObfCreateForm.patchValue({Supportpath: path});
-      }
+     
       },
       (err:any)=>{
         this.progressInfos[i].value = 0;
@@ -558,28 +589,57 @@ ProjectDetails: MatTableDataSource<any>;
       console.log(ws);
     // console.log(ws.A1.h);
     this._obfservices.ObfCreateForm.patchValue({Projectname: ws.E4.h});
+    this._obfservices.obfmodel._dh_project_name = ws.E4.h;
     this._obfservices.ObfCreateForm.patchValue({Customername: ws.E5.h});
     // this._obfservices.ObfCreateForm.patchValue({Solutioncategory: ws.E6.h});
     // this._obfservices.ObfCreateForm.patchValue({Otherservicesandcategories: ws.E7.h});
     // this._obfservices.ObfCreateForm.patchValue({Projecttype: ws.E5.h});
     this._obfservices.ObfCreateForm.patchValue({Opportunityid: ws.E6.h});
+    this._obfservices.obfmodel._opportunity_id = ws.E6.h;
     this._obfservices.ObfCreateForm.patchValue({State: ws.E7.h});
+    this._obfservices.obfmodel._dh_location = ws.E7.h;
     this._obfservices.ObfCreateForm.patchValue({Vertical: ws.E8.h});
+
+    var result = this.verticallist.filter(obj => {
+      // return obj.viewValue === ws.E8.h;
+      return obj.viewValue === "E-Commerce";
+    });
+     let verticalid = parseInt(result[0].value.toString());
+    //let verticalid = 2;
+    this._obfservices.obfmodel._vertical_id = verticalid;
      this._obfservices.ObfCreateForm.patchValue({Verticalhead: ws.E9.w});
+     var res = this.Verticalheadlist.filter(obj => {
+      // return obj.viewValue === ws.E8.h;
+      return obj.value === verticalid;
+    });
+    //let verticalheadid = res[0].vertical_head_id;
+     this._obfservices.obfmodel._verticalhead_id = res[0].vertical_head_id;
     //this._obfservices.ObfCreateForm.patchValue({Verticalhead: "abc"});
     // this._obfservices.ObfCreateForm.patchValue({Sector: ws.E11.h});
     // this._obfservices.ObfCreateForm.patchValue({Subsector: ws.E12.h});
     this._obfservices.ObfCreateForm.patchValue({Projectbrief: ws.D12.h});
+    this._obfservices.obfmodel._dh_desc = ws.D12.h;
     this._obfservices.ObfCreateForm.patchValue({Totalrevenue: ws.D13.w});
+    this._obfservices.obfmodel._total_revenue = parseFloat(ws.D13.w.toString());
     this._obfservices.ObfCreateForm.patchValue({Totalcost: ws.F13.w});
+    this._obfservices.obfmodel._total_cost = parseFloat(ws.F13.w.toString());
     this._obfservices.ObfCreateForm.patchValue({Totalmargin: ws.H13.w});
+    this._obfservices.obfmodel._total_margin = parseFloat(ws.H13.w.toString().replace('%',""));
     this._obfservices.ObfCreateForm.patchValue({Totalprojectlife: ws.D14.w});
+    this._obfservices.obfmodel._total_project_life = ws.D14.w;
     this._obfservices.ObfCreateForm.patchValue({IRRsurpluscash: ws.F14.w});
+    this._obfservices.obfmodel._irr_surplus_cash = parseFloat(ws.F14.w.toString().replace('%',""));
     this._obfservices.ObfCreateForm.patchValue({EBT: ws.H14.w});
+    this._obfservices.obfmodel._ebt = parseFloat(ws.H14.w.toString().replace('%',""));
     this._obfservices.ObfCreateForm.patchValue({Capex: ws.D15.w});
+    this._obfservices.obfmodel._capex = parseFloat(ws.D15.w.toString().replace('%',""));
     this._obfservices.ObfCreateForm.patchValue({IRRborrowedfund: ws.F15.w});
+    this._obfservices.obfmodel._irr_borrowed_fund = parseFloat(ws.F15.w.toString().replace('%',""));
     this._obfservices.ObfCreateForm.patchValue({Paymentterms: ws.H15.w});
+    this._obfservices.obfmodel._payment_terms = parseInt(ws.H15.w.toString().replace(" Days",""));
+     
     this._obfservices.ObfCreateForm.patchValue({Assumptionrisks: ws.D17.h});
+    this._obfservices.obfmodel._assumptions_and_risks = ws.D17.h;
     this._obfservices.ObfCreateForm.patchValue({Loipo: ws.D18.h});
     console.log("check form values");
     console.log(this._obfservices.ObfCreateForm);
@@ -611,11 +671,36 @@ ProjectDetails: MatTableDataSource<any>;
     // );
        }
 
-  Saveasdraft(){
+  Saveasdraft(type:string){
+    console.log("view model");
+    this._obfservices.obfmodel._dh_phase_id =1;
+    this._obfservices.obfmodel._parent_dh_main_id = 0;
+    this._obfservices.obfmodel._active = "A";
+    this._obfservices.obfmodel._status ="A";
+    this._obfservices.obfmodel._is_saved =1;
+    this._obfservices.obfmodel._is_submitted = 0;
+    this._obfservices.obfmodel._mode = "insert";
+    this._obfservices.obfmodel._service_category = "";
+    if(type == "details")
+    {
+      this._obfservices.obfmodel.save_with_solution_sector = "y";
+    }
+    else if(type == "upload")
+    {
+      this._obfservices.obfmodel.save_with_solution_sector = "n";
+    }
+    console.log(this._obfservices.obfmodel);
     const val =  this.validateform();
+    
     if(val)
     {
-     console.log(this._obfservices.ObfCreateForm.value);
+      this._obfservices.createobf(this._obfservices.obfmodel).subscribe(data =>{
+        console.log("data arrived after insert");
+        let res = JSON.parse(data);
+        console.log(res);
+        this._obfservices.obfmodel._dh_header_id = res.dh_header_id;
+        this._obfservices.obfmodel._dh_id = res.dh_id;
+      })
     }
        }
 
@@ -627,11 +712,13 @@ ProjectDetails: MatTableDataSource<any>;
       this._obfservices.ObfCreateForm.patchValue({Loiposheet: ""});
       this.loipofiles.length=0;
       this.loiopdisabled = true;
+      this._obfservices.obfmodel._is_loi_po_uploaded = "no";
     }
     else{
       this._obfservices.ObfCreateForm.get('Loiposheet').setValidators(Validators.required)
       this._obfservices.ObfCreateForm.get('Loiposheet').updateValueAndValidity();
       this.loiopdisabled = false;
+      this._obfservices.obfmodel._is_loi_po_uploaded = "yes";
     }
   }
 
@@ -777,29 +864,72 @@ ProjectDetails: MatTableDataSource<any>;
     return true;
   }
 
-  onchange(evt)
+  onchange(evt,solutioncategory)
   {
-    alert("hello world");
+    //alert("hello world");
     console.log(evt);
     var result = this.Solutiongroup.filter(obj => {
-      return obj.Solutioncategory === evt.value;
+      return obj.Solutioncategory === solutioncategory;
     });
     this.Solutionservicesarray = result[0].Solutionservices;
-    this._obfservices.ObfCreateForm.patchValue({Solutioncategory: evt.value});
+    this._obfservices.ObfCreateForm.patchValue({Solutioncategory: evt.source.value});
+
+
+  }
+     subsectorlisdisplay:subsectors[]=[];
+  onsectorchange(evt)
+  {
+    // alert("hello world");
+    // console.log(evt);
+    // var result = this.Sectorgrouparray.filter(obj => {
+    //   return obj.value === evt.value;
+    // });
+    // this.Subsecotarray = result[0].subsecorlist;
+
+    console.log(evt);
+    var result = this.subsectorlist.filter(obj => {
+      return obj.Sector_Id === evt.value;
+    });
+    this.subsectorlisdisplay = result;
+    // this._obfservices.obfmodel._Sector_Id= parseInt(this._obfservices.ObfCreateForm.get('Sector').value);
+    this._obfservices.obfmodel._Sector_Id = evt.value;
 
 
   }
 
-  onsectorchange(evt)
+  onsubsectorchange(evt)
   {
-    alert("hello world");
-    console.log(evt);
-    var result = this.Sectorgrouparray.filter(obj => {
-      return obj.value === evt.value;
-    });
-    this.Subsecotarray = result[0].subsecorlist;
+    this._obfservices.obfmodel._SubSector_Id = evt.value;
+  }
 
-
+  otherssave(type:string){
+    let solid = "";
+    let otherid ="";
+    let value = "";
+    if(type == "services"){
+      solid = "1";
+      otherid ="10";
+     value =  this._obfservices.ObfCreateForm.get('otherservices').value;
+    }
+    else if(type == "solution")
+    {
+      solid = "2";
+      otherid ="21";
+      value =  this._obfservices.ObfCreateForm.get('othersolutions').value;
+    }
+    else if(type == "integratedsolution")
+    {
+      solid = "3";
+      otherid ="29";
+      value =  this._obfservices.ObfCreateForm.get('integratedsolution').value;
+    }
+      let res = this.serviceslist.filter(obj => {
+        // return obj.viewValue === ws.E8.h;
+        return obj.value === solid;
+      });
+      let elements:Serviceslist = new Serviceslist("0",value);
+      res[0].Serviceslist.push(elements);
+    
   }
 
 }

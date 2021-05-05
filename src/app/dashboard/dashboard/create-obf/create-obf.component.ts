@@ -10,8 +10,13 @@ import {​​​​​​​​ MatDialog }​​​​​​​​ from'@angul
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { TemplateRef } from '@angular/core';
-import { ThrowStmt } from '@angular/compiler';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {MatChipInputEvent} from '@angular/material/chips';
 
+
+interface SAPIO {
+  IO: number;
+}
 
 interface Serviceslist {
   value: string;
@@ -210,6 +215,12 @@ ProjectDetails: MatTableDataSource<any>;
   step = 0;
    sectorlist:sectors[] = [];
    subsectorlist:subsectors[] = [];
+   visible = true;
+  selectable = true;
+  removable = true;
+  addOnBlur = true;
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  sapioarray:SAPIO[] = [];
   ngOnInit(): void {
     this._obfservices.ObfCreateForm.reset();
     this._obfservices.obfmodel._dh_id =0;
@@ -217,6 +228,30 @@ ProjectDetails: MatTableDataSource<any>;
     this.getcreateobfmasters();
     this.getsolutionmaster();
   }
+
+  add(event: MatChipInputEvent): void {
+    const input = event.input;
+    const value = event.value;
+
+    // Add our fruit
+    if ((value || '').trim()) {
+      this.sapioarray.push({IO: parseInt(value.trim())});
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
+  }
+
+  remove(io: SAPIO): void {
+    const index = this.sapioarray.indexOf(io);
+
+    if (index >= 0) {
+      this.sapioarray.splice(index, 1);
+    }
+  }
+
 
 getsolutionmaster()
 {
@@ -730,8 +765,8 @@ this._obfservices.getsolutionmaster().subscribe(data =>{
         let res = JSON.parse(data);
         console.log(res);
         if(res[0].status == "Success"){
-           this._obfservices.obfmodel._dh_header_id = res[0].dh_header_id;
-           this._obfservices.obfmodel._dh_id = res[0].dh_id;
+          //  this._obfservices.obfmodel._dh_header_id = res[0].dh_header_id;
+          //  this._obfservices.obfmodel._dh_id = res[0].dh_id;
           alert("Details updated Successfully");
         }
         else{
@@ -1058,7 +1093,7 @@ this._obfservices.getsolutionmaster().subscribe(data =>{
         console.log("data arrived after services update");
         let res = JSON.parse(data);
         console.log(res);
-        if(res[0].status == "Success"){
+        if(String(res[0].status).toLowerCase() == "success"){
            this._obfservices.obfmodel._dh_header_id = res[0].dh_header_id;
            this._obfservices.obfmodel._dh_id = res[0].dh_id;
           alert("Details updated Successfully");

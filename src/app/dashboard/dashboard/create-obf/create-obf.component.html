@@ -140,6 +140,26 @@
     </mat-option>
   </mat-select>
 </mat-form-field>
+<mat-form-field appearance="fill">
+  <mat-label>Enter SAP Customer Code</mat-label>
+  <input matInput placeholder="SAP Customer Code" />
+</mat-form-field>
+<mat-form-field appearance="fill">
+  <mat-label>Enter SAP IO Number</mat-label>
+  <mat-chip-list #chipList >
+    <mat-chip *ngFor="let sapio of sapioarray" [selectable]="selectable"
+             [removable]="removable" (removed)="remove(sapio)">
+      {{sapio.IO}}
+      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+    </mat-chip>
+    <input placeholder="SAP IO ..."
+    type="number"
+    [matChipInputFor]="chipList"
+    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+    [matChipInputAddOnBlur]="addOnBlur"
+    (matChipInputTokenEnd)="add($event)">
+  </mat-chip-list>
+</mat-form-field>
   </div>
   </div>
   <mat-action-row>

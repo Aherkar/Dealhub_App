@@ -10,6 +10,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatInputModule } from '@angular/material/input';
 
 
 @NgModule({
@@ -25,7 +27,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatTooltipModule,
     MatDialogModule,
     MatSelectModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatChipsModule,
+    MatInputModule
   ],
   exports:[
     MatTableModule,
@@ -37,7 +41,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatTooltipModule,
     MatDialogModule,
     MatSelectModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatChipsModule,
+    MatInputModule
   ]
 })
 export class MaterialModule { }

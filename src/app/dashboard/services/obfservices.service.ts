@@ -34,6 +34,16 @@ class SaveServiceParameter{
 //  value:string;
 //   Servicelist:elementcls[] = [];
 // }
+class obfsubmit
+{
+  _dh_id:number;
+  _dh_header_id:number;
+  _fname:string;
+  _fpath:string;
+  _created_by:string;
+  _active:string;
+  _is_submitted:number;
+}
 
 class obfsolutionandservices
 {
@@ -84,6 +94,7 @@ class obf{
   save_with_solution_sector:string;
   Attachments:SaveAttachmentParameter[] = [];
   Services:SaveServiceParameter[] =[];
+  _SubmitOBFParameters:obfsubmit[]=[];
 }
 
 @Injectable({
@@ -95,6 +106,7 @@ export class OBFServices {
 
   constructor(private http:HttpClient) { }
   obfmodel:obf = new obf();
+  obfsumbitmodel:obfsubmit = new obfsubmit();
   obfsolutionandservices:obfsolutionandservices = new obfsolutionandservices();
   SaveAttachmentParameter:SaveAttachmentParameter = new SaveAttachmentParameter();
   ObfCreateForm = new FormGroup({
@@ -159,6 +171,12 @@ export class OBFServices {
   savesolutionandservices(model:obfsolutionandservices): Observable<any> {  
     const httpOptions = { headers: new HttpHeaders({ 'No-Auth':'True','Content-Type': 'application/json'}) };  
     return this.http.post<any>("http://localhost:52229/Api/Manage_OBF/SaveServiceSolutionSector",model ,
+       httpOptions);  
+  }
+
+  SubmitOBF(model:obfsubmit): Observable<any> {  
+    const httpOptions = { headers: new HttpHeaders({ 'No-Auth':'True','Content-Type': 'application/json'}) };  
+    return this.http.post<any>("http://localhost:52229/Api/Manage_OBF/SubmitOBF",model ,
        httpOptions);  
   }
 }

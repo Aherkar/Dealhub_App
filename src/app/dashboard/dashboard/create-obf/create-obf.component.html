@@ -18,6 +18,7 @@
     
 </ngx-dropzone>
 <input [disabled]="!(coversheetfiles.length >0)" class="btn btn-primary" (click)="uploadfiles(coversheetfiles,'coversheet')" type="button" value="Upload"/>
+
 </div>
 <div style="width:25%;margin-right:15px;float: left;">
 <ngx-dropzone (change)="onSelect($event,'loipo')" accept=".xlsx" [disabled]="loiopdisabled">
@@ -51,7 +52,7 @@
 </div>
 </div>
 
-<div style="display: block;float: left;width:77%;" *ngIf="progress > 0">
+<div style="display: block;float: left;width:100%;" *ngIf="progress > 0">
     <!-- <div style="display: block;float: left;background: red;height:5px;text-align: center;color: red;"  role="progressbar" [style.width.%]="progress">
         {{progress}}%
     </div> -->
@@ -188,7 +189,7 @@
       </div>
       <div>
           <div  class="sb_buttion" (click)="EditOBF()"><button>Edit</button></div>
-          <div  class="sb_buttion"><button>Submit</button></div>
+          <div  class="sb_buttion" (click)="FinalSubmit()"><button>Submit</button></div>
       </div>
   </div>
 </mat-expansion-panel>

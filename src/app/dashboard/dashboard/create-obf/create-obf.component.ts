@@ -257,14 +257,14 @@ this._obfservices.getsolutionmaster().subscribe(data =>{
   nextStep(section) {
     if(section == "details")
     {
-      this._obfservices.ObfCreateForm.get('Solutioncategory').setValidators(Validators.required)
+      this._obfservices.ObfCreateForm.get('Solutioncategory').setValidators(Validators.required);
       this._obfservices.ObfCreateForm.get('Solutioncategory').updateValueAndValidity();
-      this._obfservices.ObfCreateForm.get('Otherservicesandcategories').setValidators(Validators.required)
+      this._obfservices.ObfCreateForm.get('Otherservicesandcategories').setValidators(Validators.required);
       this._obfservices.ObfCreateForm.get('Otherservicesandcategories').updateValueAndValidity();
 
-      this._obfservices.ObfCreateForm.get('Sector').setValidators(Validators.required)
+      this._obfservices.ObfCreateForm.get('Sector').setValidators(Validators.required);
       this._obfservices.ObfCreateForm.get('Sector').updateValueAndValidity();
-      this._obfservices.ObfCreateForm.get('Subsector').setValidators(Validators.required)
+      this._obfservices.ObfCreateForm.get('Subsector').setValidators(Validators.required);
       this._obfservices.ObfCreateForm.get('Subsector').updateValueAndValidity();
 
     }
@@ -282,6 +282,11 @@ this._obfservices.getsolutionmaster().subscribe(data =>{
       this._obfservices.ObfCreateForm.get('Solutioncategory').updateValueAndValidity();
       this._obfservices.ObfCreateForm.get('Otherservicesandcategories').clearValidators();
       this._obfservices.ObfCreateForm.get('Otherservicesandcategories').updateValueAndValidity();
+
+      this._obfservices.ObfCreateForm.get('Sector').clearValidators();
+      this._obfservices.ObfCreateForm.get('Sector').updateValueAndValidity();
+      this._obfservices.ObfCreateForm.get('Subsector').clearValidators();
+      this._obfservices.ObfCreateForm.get('Subsector').updateValueAndValidity();
     }
     this.step--;
   }
@@ -685,7 +690,7 @@ this._obfservices.getsolutionmaster().subscribe(data =>{
     {
       if(this._obfservices.obfmodel._dh_id === 0)
       {
-        this._obfservices.obfmodel.save_with_solution_sector = "y";
+        this._obfservices.obfmodel.save_with_solution_sector = "Y";
         
       let val =  this.validateform();
       if(val)
@@ -707,7 +712,7 @@ this._obfservices.getsolutionmaster().subscribe(data =>{
       }
       else
       {
-      this._obfservices.obfmodel.save_with_solution_sector = "n";
+      this._obfservices.obfmodel.save_with_solution_sector = "N";
       this._obfservices.obfsolutionandservices._dh_id = this._obfservices.obfmodel._dh_id;
       this._obfservices.obfsolutionandservices._dh_header_id = this._obfservices.obfmodel._dh_header_id;
       this._obfservices.obfsolutionandservices._fname = this._obfservices.obfmodel._fname;
@@ -725,8 +730,8 @@ this._obfservices.getsolutionmaster().subscribe(data =>{
         let res = JSON.parse(data);
         console.log(res);
         if(res[0].status == "Success"){
-          // this._obfservices.obfmodel._dh_header_id = res[0].dh_header_id;
-          // this._obfservices.obfmodel._dh_id = res[0].dh_id;
+           this._obfservices.obfmodel._dh_header_id = res[0].dh_header_id;
+           this._obfservices.obfmodel._dh_id = res[0].dh_id;
           alert("Details updated Successfully");
         }
         else{
@@ -740,7 +745,7 @@ this._obfservices.getsolutionmaster().subscribe(data =>{
     }
     else if(type == "upload")
     {
-      this._obfservices.obfmodel.save_with_solution_sector = "n";
+      this._obfservices.obfmodel.save_with_solution_sector = "N";
       let val =  this.validateform();
       if(val)
     {
@@ -758,6 +763,7 @@ this._obfservices.getsolutionmaster().subscribe(data =>{
       }
       })
     }
+    console.log("check why form not valid");
     console.log(this._obfservices.obfmodel);
     }
    }
@@ -990,6 +996,83 @@ this._obfservices.getsolutionmaster().subscribe(data =>{
       let elements:Serviceslist = new Serviceslist("0",value);
       res[0].Serviceslist.push(elements);
     
+  }
+
+  FinalSubmit()
+  {
+    this._obfservices.obfmodel._dh_phase_id =1;
+    this._obfservices.obfmodel._parent_dh_main_id = 0;
+    this._obfservices.obfmodel._active = "A";
+    this._obfservices.obfmodel._status ="A";
+    this._obfservices.obfmodel._is_saved =1;
+    this._obfservices.obfmodel._is_submitted = 1;
+    this._obfservices.obfmodel._mode = "insert";
+    this._obfservices.obfmodel._service_category = "";
+    if(this._obfservices.obfmodel._dh_id === 0)
+      {
+        this._obfservices.obfmodel.save_with_solution_sector = "Y";
+        this._obfservices.obfsumbitmodel._dh_id = this._obfservices.obfmodel._dh_id;
+      this._obfservices.obfsumbitmodel._dh_header_id = this._obfservices.obfmodel._dh_header_id;
+      this._obfservices.obfsumbitmodel._fname = this._obfservices.obfmodel._fname;
+      this._obfservices.obfsumbitmodel._fpath = this._obfservices.obfmodel._fpath;
+      this._obfservices.obfsumbitmodel._created_by = this._obfservices.obfmodel._created_by;
+      this._obfservices.obfsumbitmodel._active = this._obfservices.obfmodel._active;
+      this._obfservices.obfsumbitmodel._is_submitted = this._obfservices.obfmodel._is_submitted;
+
+      this._obfservices.obfmodel._SubmitOBFParameters.push(this._obfservices.obfsumbitmodel);
+        
+      let val =  this.validateform();
+      if(val)
+    {
+      this._obfservices.createobf(this._obfservices.obfmodel).subscribe(data =>{
+        console.log("data arrived after insert");
+        let res = JSON.parse(data);
+        console.log(res);
+        if(res[0].Result == "success"){
+        this._obfservices.obfmodel._dh_header_id = res[0].dh_header_id;
+        this._obfservices.obfmodel._dh_id = res[0].dh_id;
+        alert("Documents uploaded Successfully");
+      }
+      else{
+        alert("Technical error while uploading documents");
+      }
+      })
+    }
+      }
+    else
+    {
+      this._obfservices.obfmodel.save_with_solution_sector = "N";
+      this._obfservices.obfsumbitmodel._dh_id = this._obfservices.obfmodel._dh_id;
+      this._obfservices.obfsumbitmodel._dh_header_id = this._obfservices.obfmodel._dh_header_id;
+      this._obfservices.obfsumbitmodel._fname = this._obfservices.obfmodel._fname;
+      this._obfservices.obfsumbitmodel._fpath = this._obfservices.obfmodel._fpath;
+      this._obfservices.obfsumbitmodel._created_by = this._obfservices.obfmodel._created_by;
+      this._obfservices.obfsumbitmodel._active = this._obfservices.obfmodel._active;
+      this._obfservices.obfsumbitmodel._is_submitted = this._obfservices.obfmodel._is_submitted;
+      
+
+      let val =  this.validateform();
+      if(val)
+    {
+      this._obfservices.SubmitOBF(this._obfservices.obfsumbitmodel).subscribe(data =>{
+        console.log("data arrived after services update");
+        let res = JSON.parse(data);
+        console.log(res);
+        if(res[0].status == "Success"){
+           this._obfservices.obfmodel._dh_header_id = res[0].dh_header_id;
+           this._obfservices.obfmodel._dh_id = res[0].dh_id;
+          alert("Details updated Successfully");
+        }
+        else{
+          alert("Technical error while updating details");
+        }
+        // this._obfservices.obfmodel._dh_header_id = res.dh_header_id;
+        // this._obfservices.obfmodel._dh_id = res.dh_id;
+      })
+    }
+    
+    }
+
   }
 
 }

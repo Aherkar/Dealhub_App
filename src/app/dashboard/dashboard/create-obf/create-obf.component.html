@@ -142,14 +142,14 @@
 </mat-form-field>
 <mat-form-field appearance="fill">
   <mat-label>Enter SAP Customer Code</mat-label>
-  <input matInput placeholder="SAP Customer Code" />
+  <input matInput [(ngModel)]="_obfservices.obfmodel._sap_customer_code" [ngModelOptions]="{standalone: true}" placeholder="SAP Customer Code" />
 </mat-form-field>
 <mat-form-field appearance="fill">
   <mat-label>Enter SAP IO Number</mat-label>
   <mat-chip-list #chipList >
-    <mat-chip *ngFor="let sapio of sapioarray" [selectable]="selectable"
+    <mat-chip *ngFor="let sapio of _obfservices.obfmodel.sapio" [selectable]="selectable"
              [removable]="removable" (removed)="remove(sapio)">
-      {{sapio.IO}}
+      {{sapio._Cust_SAP_IO_Number}}
       <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
     </mat-chip>
     <input placeholder="SAP IO ..."

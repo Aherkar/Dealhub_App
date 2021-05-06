@@ -4,7 +4,7 @@ import * as XLSX from 'xlsx';
 import { DashboardService } from '../../dashboard.service';
 import {DomSanitizer} from '@angular/platform-browser';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { OBFServices } from '../../services/obfservices.service';
+import { OBFServices, SAPIO } from '../../services/obfservices.service';
 import {​​​​​​​​ MatTableModule ,MatTableDataSource}​​​​​​​​ from'@angular/material/table';
 import {​​​​​​​​ MatDialog }​​​​​​​​ from'@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
@@ -14,9 +14,7 @@ import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material/chips';
 
 
-interface SAPIO {
-  IO: number;
-}
+
 
 interface Serviceslist {
   value: string;
@@ -220,7 +218,7 @@ ProjectDetails: MatTableDataSource<any>;
   removable = true;
   addOnBlur = true;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-  sapioarray:SAPIO[] = [];
+  // sapioarray:SAPIO[] = [];
   ngOnInit(): void {
     this._obfservices.ObfCreateForm.reset();
     this._obfservices.obfmodel._dh_id =0;
@@ -235,23 +233,26 @@ ProjectDetails: MatTableDataSource<any>;
 
     // Add our fruit
     if ((value || '').trim()) {
-      this.sapioarray.push({IO: parseInt(value.trim())});
+      this._obfservices.obfmodel.sapio.push({_Cust_SAP_IO_Number: parseInt(value.trim())});
     }
 
     // Reset the input value
     if (input) {
       input.value = '';
     }
+    console.log("checking in chip");
+    console.log(this._obfservices.obfmodel);
   }
 
   remove(io: SAPIO): void {
-    const index = this.sapioarray.indexOf(io);
+    const index = this._obfservices.obfmodel.sapio.indexOf(io);
 
     if (index >= 0) {
-      this.sapioarray.splice(index, 1);
+      this._obfservices.obfmodel.sapio.splice(index, 1);
     }
   }
 
+  
 
 getsolutionmaster()
 {
@@ -631,6 +632,7 @@ this._obfservices.getsolutionmaster().subscribe(data =>{
     this._obfservices.ObfCreateForm.patchValue({Projectname: ws.E4.h});
     this._obfservices.obfmodel._dh_project_name = ws.E4.h;
     this._obfservices.ObfCreateForm.patchValue({Customername: ws.E5.h});
+    this._obfservices.obfmodel._customer_name = ws.E5.h;
     // this._obfservices.ObfCreateForm.patchValue({Solutioncategory: ws.E6.h});
     // this._obfservices.ObfCreateForm.patchValue({Otherservicesandcategories: ws.E7.h});
     // this._obfservices.ObfCreateForm.patchValue({Projecttype: ws.E5.h});
@@ -756,6 +758,8 @@ this._obfservices.getsolutionmaster().subscribe(data =>{
       this._obfservices.obfsolutionandservices._Sector_Id = this._obfservices.obfmodel._Sector_Id;
       this._obfservices.obfsolutionandservices._SubSector_Id = this._obfservices.obfmodel._SubSector_Id;
       this._obfservices.obfsolutionandservices.Services = this._obfservices.obfmodel.Services;
+      this._obfservices.obfsolutionandservices._sap_customer_code = this._obfservices.obfmodel._sap_customer_code;
+      this._obfservices.obfsolutionandservices.sapio = this._obfservices.obfmodel.sapio;
 
       let val =  this.validateform();
       if(val)
@@ -1093,7 +1097,7 @@ this._obfservices.getsolutionmaster().subscribe(data =>{
         console.log("data arrived after services update");
         let res = JSON.parse(data);
         console.log(res);
-        if(String(res[0].status).toLowerCase() == "success"){
+        if(String(res[0].status).toLowerCase() == "sucess"){
            this._obfservices.obfmodel._dh_header_id = res[0].dh_header_id;
            this._obfservices.obfmodel._dh_id = res[0].dh_id;
           alert("Details updated Successfully");

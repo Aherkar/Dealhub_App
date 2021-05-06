@@ -3,6 +3,11 @@ import { Injectable } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
+
+export interface SAPIO {
+  _Cust_SAP_IO_Number: number;
+}
+
 class SaveAttachmentParameter{
   _dh_id:number;
   _dh_header_id:number;
@@ -55,6 +60,8 @@ class obfsolutionandservices
   Services:SaveServiceParameter[] =[];
   _Sector_Id:number;
   _SubSector_Id:number;
+  _sap_customer_code:string;
+  sapio:SAPIO[] = [];
 }
 
 
@@ -95,6 +102,9 @@ class obf{
   Attachments:SaveAttachmentParameter[] = [];
   Services:SaveServiceParameter[] =[];
   _SubmitOBFParameters:obfsubmit[]=[];
+  _customer_name:string;
+  _sap_customer_code:string;
+  sapio:SAPIO[] = [];
 }
 
 @Injectable({
